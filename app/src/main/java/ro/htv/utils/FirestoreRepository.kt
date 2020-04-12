@@ -24,4 +24,19 @@ class FirestoreRepository {
 
         return response
     }
+
+    fun setImage(uid: String, uri: String): MutableLiveData<Boolean> {
+        // imi bag pula in el fail gracefully
+        // is prea mici sansele sa esueze aici
+        val response = MutableLiveData<Boolean>()
+
+        usersCollection.document(uid).update("profileImage", uri)
+                .addOnSuccessListener {
+                    response.value = true
+                }.addOnFailureListener {
+                    response.value = false
+                }
+
+        return response
+    }
 }
