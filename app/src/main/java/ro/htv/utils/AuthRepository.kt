@@ -37,4 +37,23 @@ class AuthRepository {
     fun logout() {
         firebaseAuth.signOut()
     }
+
+    fun getUser(): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        if (firebaseAuth.currentUser != null) {
+            response.value = Response(
+                    Utils.Responses.OK,
+                    firebaseAuth.currentUser!!.uid
+            )
+        } else {
+            response.value = Response(
+                    Utils.Responses.ERROR,
+                    ""
+            )
+        }
+
+
+        return response
+    }
 }
