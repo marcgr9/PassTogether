@@ -7,8 +7,14 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Patterns
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_register.*
+import ro.htv.model.Response
+import ro.htv.model.User
+import ro.htv.utils.AuthRepository
+import ro.htv.utils.FirestoreRepository
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -17,12 +23,18 @@ class Register : AppCompatActivity() {
 
     private val TAG = "HackTheVirus Register"
 
+    private lateinit var authRepository: AuthRepository
+    private lateinit var firestoreRepository: FirestoreRepository
+
     private val PICK_IMAGE_REQUEST = 123
     private var pictureUri: Uri = Uri.parse("https://pozadefault")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        authRepository = AuthRepository()
+        firestoreRepository = FirestoreRepository()
 
         registerBtn.setOnClickListener {
             validateInputs()
@@ -61,7 +73,27 @@ class Register : AppCompatActivity() {
 
         if (errors.isEmpty()) {
             Log.d(TAG, "firebase")
-            // firebase
+
+            val user: MutableLiveData<Response> = authRepository.register(email, pass)
+
+            user.observe(this, Observer {
+                if (it.ok()) {
+                    val userData = User(it.value.toString(), email, name, birthday)
+                    val userDocument: MutableLiveData<Response> = firestoreRepository.createUser(userData)
+
+                    userDocument.observe(this, Observer { doc ->
+                        if (doc.ok()) {
+                            Log.d(TAG, "document creat in firestore pt ${doc.value} cu uid ${it.value}")
+                            startActivity(Intent(this, MainActivity::class.java).putExtra("uid", it.value.toString()))
+                        } else {
+                            Log.d(TAG, "eroare la creare doc user ${it.value}")
+                            errField.text = it.value.toString()
+                        }
+                    })
+                } else {
+                    errField.text = it.value.toString()
+                }
+            })
 
         } else errField.text = errors
     }
