@@ -1,6 +1,8 @@
 package ro.htv
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +17,8 @@ import ro.htv.model.Response
 import ro.htv.model.User
 import ro.htv.utils.AuthRepository
 import ro.htv.utils.FirestoreRepository
+import ro.htv.utils.StorageRepository
+import ro.htv.utils.Utils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -25,9 +29,10 @@ class Register : AppCompatActivity() {
 
     private lateinit var authRepository: AuthRepository
     private lateinit var firestoreRepository: FirestoreRepository
+    private lateinit var storageRepository: StorageRepository
 
     private val PICK_IMAGE_REQUEST = 123
-    private var pictureUri: Uri = Uri.parse("https://pozadefault")
+    private var pictureUri: Uri = Uri.parse(Utils.defaultProfilePicture)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,7 @@ class Register : AppCompatActivity() {
 
         authRepository = AuthRepository()
         firestoreRepository = FirestoreRepository()
+        storageRepository = StorageRepository()
 
         registerBtn.setOnClickListener {
             validateInputs()
@@ -84,7 +90,13 @@ class Register : AppCompatActivity() {
                     userDocument.observe(this, Observer { doc ->
                         if (doc.ok()) {
                             Log.d(TAG, "document creat in firestore pt ${doc.value} cu uid ${it.value}")
-                            startActivity(Intent(this, MainActivity::class.java).putExtra("uid", it.value.toString()))
+
+                            if (pictureUri.toString() != Utils.defaultProfilePicture) {
+                                val source = ImageDecoder.createSource(this.contentResolver, pictureUri)
+                                val bitmap = ImageDecoder.decodeBitmap(source)
+
+                                uploadImage(bitmap, it.value.toString())
+                            } else startActivity(Intent(this, MainActivity::class.java).putExtra("uid", it.value.toString()))
                         } else {
                             Log.d(TAG, "eroare la creare doc user ${it.value}")
                             errField.text = it.value.toString()
@@ -140,5 +152,27 @@ class Register : AppCompatActivity() {
             return R.string.invalidDate
 
         return null
+    }
+
+    fun uploadImage(bitmap: Bitmap, uid: String) {
+        val img: MutableLiveData<Response> = storageRepository.uploadImage(bitmap, uid)
+
+        img.observe(this, Observer {
+            if (it.ok()) {
+                Log.d(TAG, "imagine uploadata: ${it.value}")
+
+                val linkSetat = firestoreRepository.setImage(uid, it.value.toString())
+
+                linkSetat.observe(this, Observer {link ->
+                    if (link) startActivity(Intent(this, MainActivity::class.java).putExtra("uid", uid))
+                    else {
+                        // ma pis pe el
+                    }
+                })
+
+            } else {
+                errField.text = it.value.toString()
+            }
+        })
     }
 }
