@@ -1,5 +1,6 @@
 package ro.htv.utils
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import ro.htv.model.Response
@@ -37,6 +38,20 @@ class FirestoreRepository {
                     response.value = false
                 }
 
+        return response
+    }
+
+    fun getTopics(): MutableLiveData<ArrayList<String>> {
+        val response = MutableLiveData<ArrayList<String>>()
+        val arr = ArrayList<String>()
+        root.collection("topics").get()
+                .addOnSuccessListener {
+                    it.forEach { it2 ->
+                        Log.d(TAG, it2.data["name"].toString())
+                        arr.add(it2.data["name"].toString())
+                        response.value = arr
+                    }
+                }
         return response
     }
 }

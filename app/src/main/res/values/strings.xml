@@ -15,5 +15,8 @@
     <string name="invalidDateFormat">Formatul zilei de nastere este dd/mm/yyyy</string>
     <string name="invalidDate">Trebuie sa ai 14 ani ca sa te poti inregistra</string>
     <string name="blankInputs">Campurile nu au voie sa fie necompletate</string>
+    <string name="search">Acceseaza</string>
+    <string name="chooseTopic">Alege topicul</string>
+    <string name="invalidTopic">Nu am gasit topicul ales :(</string>
 
 </resources>
