@@ -1,13 +1,18 @@
 <resources>
     <string name="app_name">HackTheVirus</string>
+
     <string name="register">Inregistrare</string>
+    <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="name">Nume</string>
     <string name="password">Parola</string>
     <string name="birthday">Data nasterii</string>
+    <string name="noAccount">Nu ai cont? Inregistreaza-te aici</string>
+
     <string name="invalidEmail">Email-ul e invalid</string>
     <string name="invalidPass">Parola e prea simpla!</string>
     <string name="invalidName">Numele trebuie sa fie format doar din litere si spatii</string>
     <string name="invalidDateFormat">Formatul zilei de nastere este dd/mm/yyyy</string>
     <string name="invalidDate">Trebuie sa ai 14 ani ca sa te poti inregistra</string>
+
 </resources>
