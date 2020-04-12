@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1085254795689",
+    "firebase_url": "https://hackthevirus-e1fed.firebaseio.com",
+    "project_id": "hackthevirus-e1fed",
+    "storage_bucket": "hackthevirus-e1fed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085254795689:android:0e7cce0a9830a68992c4b8",
+        "android_client_info": {
+          "package_name": "ro.htv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085254795689-4is7gmqng2hqif101942hgt4cd4aqapb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ro.htv",
+            "certificate_hash": "7cde84d81ec41a27fbd0c32005471baf46a50742"
+          }
+        },
+        {
+          "client_id": "1085254795689-ijien5mnd1ekr1e2ggmifcfqejd9hgnk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaoLgZFOLnISGM0ylMmYm4VLXqw9yY2yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085254795689-ijien5mnd1ekr1e2ggmifcfqejd9hgnk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
