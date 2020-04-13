@@ -9,9 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".PostariTopic"/>
-        <activity android:name=".TopicSelection"/>
-        <activity android:name=".UserProfile"></activity>
+        <activity android:name=".CometariiPostare"></activity>
+        <activity android:name=".PostariTopic" />
+        <activity android:name=".TopicSelection" />
+        <activity android:name=".UserProfile" />
         <activity android:name=".Login" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Register" />
