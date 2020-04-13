@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_topic_selection.*
+import ro.htv.model.User
 import ro.htv.utils.FirestoreRepository
 import ro.htv.utils.Utils
 import java.util.ArrayList
@@ -18,9 +19,13 @@ class TopicSelection : AppCompatActivity() {
     private lateinit var firestoreRepository: FirestoreRepository
     private var topicsList = ArrayList<String>()
 
+    private var uid = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topic_selection)
+
+        uid = intent.getStringExtra("uid")!!
 
         firestoreRepository = FirestoreRepository()
 
@@ -41,17 +46,8 @@ class TopicSelection : AppCompatActivity() {
                 // bravo
                 //Log.d(TAG, autocomplete.text.toString())
 
-                startActivity(Intent(this, PostariTopic::class.java).putExtra("topic", autocomplete.text.toString()))
+                startActivity(Intent(this, PostariTopic::class.java).putExtra("topic", autocomplete.text.toString()).putExtra("uid", uid))
 
-//                val posts = firestoreRepository.getPostsByTopic(autocomplete.text.toString())
-//
-//                posts.observe(this, Observer {
-//                    if (it.ok()) {
-//                        Log.d(TAG, it.value.toString())
-//                        startActivity(Intent(this, PostariTopic::class.java).putExtra("posts", it.value.toString()))
-//                    }
-//                    else if (it.value == Utils.Errors.EMPTY) Log.d(TAG, "gol")
-//                })
             }
         }
     }
