@@ -16,6 +16,7 @@ import ro.htv.utils.StorageRepository;
 import ro.htv.utils.Utils;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -43,7 +44,7 @@ public class PostariTopic extends AppCompatActivity {
     private String TAG = "HackTheVirus PostariTopic";
 
     private RecyclerView recyclerView ;
-    private RecyclerView.Adapter adapter;
+    private AdapterList adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private String topic = "";
@@ -221,10 +222,16 @@ public class PostariTopic extends AppCompatActivity {
                     posts = postsResponse.getPosts();
                     for(Post X: posts)
                     {
-                        lista.add(new Postare(X.getLinkToImage(),X.getLinkToImage(),X.getOwner_name(), X.getText()));
+                        lista.add(new Postare(X.getLinkToImage(),X.getLinkToImage(),X.getOwner_name(), X.getText(), 1));
                     }
 
                     adapter = new AdapterList(lista);
+                    adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
+                        @Override
+                        public void OnItemClick(int poz) {
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class));
+                        }
+                    });
 
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
@@ -238,7 +245,7 @@ public class PostariTopic extends AppCompatActivity {
 
     private void uploadImage(Bitmap bitmap) {
         System.out.println("ndsdifnsi");
-        MutableLiveData<Response> pendingImage = storageRepository.uploadImage(bitmap, "post");
+        final MutableLiveData<Response> pendingImage = storageRepository.uploadImage(bitmap, "post");
         final LifecycleOwner th = this;
         pendingImage.observe(th, new Observer<Response>() {
             @Override
@@ -260,8 +267,6 @@ public class PostariTopic extends AppCompatActivity {
                             }
                         }
                     });
-
-
                 }
             }
         });
