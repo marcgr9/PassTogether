@@ -10,4 +10,6 @@ object Utils {
     enum class Errors {
         EMPTY
     }
+
+    val PICK_IMAGE_RC = 13
 }

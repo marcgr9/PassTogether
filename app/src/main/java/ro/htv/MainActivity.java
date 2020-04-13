@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = "HackTheVirus Main";
 
+    private String uid = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         // sa ma pis pe el java
 
-        String uid = getIntent().getStringExtra("uid");
+        uid = getIntent().getStringExtra("uid");
 
         TextView txtView = findViewById(R.id.textView);
         Button btn = findViewById(R.id.button);
@@ -51,5 +53,15 @@ public class MainActivity extends AppCompatActivity {
 
         FirestoreRepository fs = new FirestoreRepository();
         fs.getTopics();
+
+        TextView txt2 = findViewById(R.id.textView2);
+
+        txt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uid));
+            }
+        });
     }
 }
