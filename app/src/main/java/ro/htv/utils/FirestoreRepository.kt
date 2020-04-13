@@ -124,6 +124,7 @@ class FirestoreRepository {
 
         root.collection("posts").add(post)
                 .addOnSuccessListener {
+                    root.collection("posts").document(it.id).update("idpost", it.id)
                     response.value  = Response(
                             Utils.Responses.OK,
                             ""
