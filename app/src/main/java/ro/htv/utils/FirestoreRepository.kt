@@ -118,4 +118,51 @@ class FirestoreRepository {
 
         return response
     }
+
+    fun addPost(post: Post): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        root.collection("posts").add(post)
+                .addOnSuccessListener {
+                    response.value  = Response(
+                            Utils.Responses.OK,
+                            ""
+                    )
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
+
+        return response
+    }
+
+    fun getPostsByUser(uid: String): MutableLiveData<PostsResponse> {
+        val response = MutableLiveData<PostsResponse>()
+
+        root.collection("posts")
+                .whereEqualTo("owner_uid", uid)
+                .whereEqualTo("post", true).get()
+                .addOnSuccessListener {
+                    val arr = ArrayList<Post>()
+                    it.forEach { snapshot ->
+                        arr.add(snapshot.toObject(Post::class.java))
+                    }
+
+                    if (arr.isNotEmpty()) {
+                        response.value = PostsResponse(
+                                Utils.Responses.OK,
+                                arr
+                        )
+                    } else {
+                        response.value = PostsResponse(
+                                Utils.Responses.ERROR,
+                                null
+                        )
+                    }
+                }
+
+        return response
+    }
 }
