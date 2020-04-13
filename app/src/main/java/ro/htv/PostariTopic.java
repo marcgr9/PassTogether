@@ -222,11 +222,13 @@ public class PostariTopic extends AppCompatActivity {
                     posts = postsResponse.getPosts();
                     lista = posts;
 
+                    final ArrayList<Post> finalPost = lista;
+
                     adapter = new AdapterList(lista);
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                         @Override
                         public void OnItemClick(int poz) {
-                            startActivity(new Intent(getBaseContext(), CometariiPostare.class));
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", finalPost.get(poz).getIdpost()));
                         }
                     });
 
