@@ -3,6 +3,8 @@ package ro.htv.utils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import ro.htv.model.Post
+import ro.htv.model.PostsResponse
 import ro.htv.model.Response
 import ro.htv.model.User
 
@@ -55,36 +57,37 @@ class FirestoreRepository {
         return response
     }
 
-    fun getPostsByTopic(topic: String): MutableLiveData<Response> {
-        val response = MutableLiveData<Response>()
+    fun getPostsByTopic(topic: String): MutableLiveData<PostsResponse> {
+        val response = MutableLiveData<PostsResponse>()
 
         root.collection("posts")
                 .whereEqualTo("post", true)
                 .whereEqualTo("topic", topic)
                 .get()
                 .addOnSuccessListener {
-                    val arr = ArrayList<String>()
+                    val arr = ArrayList<Post>()
                     it.forEach { snapshot ->
-                        Log.d(TAG, "asd ${snapshot.data.toMap()}")
-                        arr.add(snapshot.data.toMap().toString())
+                        //Log.d(TAG, "asd ${snapshot.data.toMap()}")
+                        arr.add(snapshot.toObject(Post::class.java))
                     }
                     if (arr.isNotEmpty()) {
-                        response.value = Response(
+                        response.value = PostsResponse(
                                 Utils.Responses.OK,
                                 arr
                         )
                     } else {
-                        response.value = Response(
+                        response.value = PostsResponse(
                                 Utils.Responses.ERROR,
-                                Utils.Errors.EMPTY
+                                null
                         )
                     }
-                }.addOnFailureListener {
-                    response.value = Response(
-                            Utils.Responses.ERROR,
-                            it.message
-                    )
-                }
+                  }
+//                .addOnFailureListener {
+//                    response.value = Response(
+//                            Utils.Responses.ERROR,
+//                            it.message
+//                    )
+//                }
 
         return response
     }

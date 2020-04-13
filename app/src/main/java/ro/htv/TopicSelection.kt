@@ -1,5 +1,6 @@
 package ro.htv
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -40,13 +41,17 @@ class TopicSelection : AppCompatActivity() {
                 // bravo
                 //Log.d(TAG, autocomplete.text.toString())
 
-                val posts = firestoreRepository.getPostsByTopic(autocomplete.text.toString())
+                startActivity(Intent(this, PostariTopic::class.java).putExtra("topic", autocomplete.text.toString()))
 
-                posts.observe(this, Observer {
-                    if (it.ok())
-                        Log.d(TAG, it.value.toString())
-                    else if (it.value == Utils.Errors.EMPTY) Log.d(TAG, "gol")
-                })
+//                val posts = firestoreRepository.getPostsByTopic(autocomplete.text.toString())
+//
+//                posts.observe(this, Observer {
+//                    if (it.ok()) {
+//                        Log.d(TAG, it.value.toString())
+//                        startActivity(Intent(this, PostariTopic::class.java).putExtra("posts", it.value.toString()))
+//                    }
+//                    else if (it.value == Utils.Errors.EMPTY) Log.d(TAG, "gol")
+//                })
             }
         }
     }
