@@ -18,12 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import ro.htv.model.Post;
 import ro.htv.model.PostsResponse;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
-    private ArrayList<Postare> listaelem;
+    private ArrayList<Post> listaelem;
 
     private OnItemClickListener mListener;
     public interface OnItemClickListener{
@@ -63,7 +64,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         }
 
     }
-    public AdapterList (ArrayList<Postare>lista)
+    public AdapterList (ArrayList<Post>lista)
     {
         listaelem = lista;
     }
@@ -77,16 +78,16 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
 
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
-        Postare PostareActuala = listaelem.get(position);
+        Post PostareActuala = listaelem.get(position);
 
-        if (PostareActuala.tip == 1) {
+        if (PostareActuala.getPost() == false) {
             holder.up.setBackgroundColor(Color.parseColor("#dedd8c"));
             holder.down.setBackgroundColor(Color.parseColor("#8cdec7"));
         }
-        if (PostareActuala.imRezEx == null)
+        if (PostareActuala.getLinkToImage() == null)
             holder.Im2.setImageDrawable(null);
-        holder.Nume.setText(PostareActuala.getNumePrenume());
-        holder.Desc.setText(PostareActuala.getDescriere());
+        holder.Nume.setText(PostareActuala.getOwner_name());
+        holder.Desc.setText(PostareActuala.getText());
     }
 
     @Override

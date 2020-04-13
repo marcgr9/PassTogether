@@ -1,7 +1,7 @@
 package ro.htv.model
 
 data class Post(
-        var idpost:Int = 0,
+        var idpost: String = "",
         var ownwer_uid: String = "",
         var owner_name: String = "",
         var topic: String = "",

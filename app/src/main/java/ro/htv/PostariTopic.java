@@ -217,13 +217,10 @@ public class PostariTopic extends AppCompatActivity {
             @Override
             public void onChanged(PostsResponse postsResponse) {
                 if (postsResponse.getStatus() == Utils.Responses.OK) {
-                    ArrayList<Postare> lista = new ArrayList<>();
+                    ArrayList<Post> lista = new ArrayList<>();
 
                     posts = postsResponse.getPosts();
-                    for(Post X: posts)
-                    {
-                        lista.add(new Postare(X.getLinkToImage(),X.getLinkToImage(),X.getOwner_name(), X.getText(), 1));
-                    }
+                    lista = posts;
 
                     adapter = new AdapterList(lista);
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {

@@ -30,11 +30,7 @@ public class CometariiPostare extends AppCompatActivity {
         tv.setText("Merge Asta");
         TextView desc = (TextView)findViewById(R.id.descriere);
         desc.setText("DEscrierea");
-        ArrayList<Postare> lista = new ArrayList<>();
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
+        ArrayList<Post> lista = new ArrayList<>();
         adapter = new AdapterList(lista);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
