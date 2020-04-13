@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.storage.FirebaseStorage
 import ro.htv.model.Response
 import java.io.ByteArrayOutputStream
+import kotlin.random.Random
 
 class StorageRepository {
 
@@ -18,8 +19,13 @@ class StorageRepository {
     fun uploadImage(img: Bitmap, uid: String): MutableLiveData<Response> {
         val response = MutableLiveData<Response>()
 
+        var userRef = storageRef
         val baos = ByteArrayOutputStream()
-        val userRef = storageRef.child(uid)
+        if (uid != "post") {
+            userRef = storageRef.child(uid)
+        } else {
+            userRef = rootRef.child("post_pics").child("poza_postare${Random.nextInt()}")
+        }
         img.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val image = baos.toByteArray()
 
@@ -33,9 +39,11 @@ class StorageRepository {
                                 )
                             }.addOnFailureListener {
                                 // imi bag pula de esueaza aici
+                                Log.d(TAG, "esuat 1 ${it.message}")
                             }
 
                 }.addOnFailureListener {
+                    Log.d(TAG, "esuat 2 ${it.message}")
                     response.value = Response(
                             Utils.Responses.ERROR,
                             it.message

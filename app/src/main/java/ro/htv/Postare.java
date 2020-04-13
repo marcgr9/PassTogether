@@ -1,24 +1,30 @@
 package ro.htv;
 
 public class Postare {
-    public int imRezEx;
-    public int imRezProfil;
+    public  String imRezEx;
+    public String imRezProfil;
     public String NumePrenume;
     public String Descriere;
+    public int tip;
 
-    public Postare(int imrez1, int imrez2, String Nume, String Des)
+    public int getTip() {
+        return tip;
+    }
+
+    public Postare(String imrez1, String imrez2, String Nume, String Des, int tipp)
     {
         imRezEx = imrez1;
         imRezProfil = imrez2;
         NumePrenume = Nume;
         Descriere = Des;
+        tip = tipp;
     }
 
-    public int getImRezEx() {
+    public String getImRezEx() {
         return imRezEx;
     }
 
-    public int getImRezProfil() {
+    public String getImRezProfil() {
         return imRezProfil;
     }
 

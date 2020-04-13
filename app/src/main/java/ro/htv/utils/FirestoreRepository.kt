@@ -3,6 +3,8 @@ package ro.htv.utils
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import ro.htv.model.Post
+import ro.htv.model.PostsResponse
 import ro.htv.model.Response
 import ro.htv.model.User
 
@@ -52,6 +54,115 @@ class FirestoreRepository {
                         response.value = arr
                     }
                 }
+        return response
+    }
+
+    fun getPostsByTopic(topic: String): MutableLiveData<PostsResponse> {
+        val response = MutableLiveData<PostsResponse>()
+
+        root.collection("posts")
+                .whereEqualTo("post", true)
+                .whereEqualTo("topic", topic)
+                .get()
+                .addOnSuccessListener {
+                    val arr = ArrayList<Post>()
+                    it.forEach { snapshot ->
+                        //Log.d(TAG, "asd ${snapshot.data.toMap()}")
+                        arr.add(snapshot.toObject(Post::class.java))
+                    }
+                    if (arr.isNotEmpty()) {
+                        response.value = PostsResponse(
+                                Utils.Responses.OK,
+                                arr
+                        )
+                    } else {
+                        response.value = PostsResponse(
+                                Utils.Responses.ERROR,
+                                null
+                        )
+                    }
+                  }
+//                .addOnFailureListener {
+//                    response.value = Response(
+//                            Utils.Responses.ERROR,
+//                            it.message
+//                    )
+//                }
+
+        return response
+    }
+
+    fun getUser(uid: String): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        root.collection("users").document(uid).get()
+                .addOnSuccessListener {
+                    if (it != null) {
+                        response.value = Response(
+                                Utils.Responses.OK,
+                                it!!.toObject(User::class.java)
+                        )
+                        Log.d(TAG, it.toString())
+                    } else {
+                        response.value = Response(
+                                Utils.Responses.ERROR,
+                                Utils.Errors.EMPTY
+                        )
+                    }
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
+
+        return response
+    }
+
+    fun addPost(post: Post): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        root.collection("posts").add(post)
+                .addOnSuccessListener {
+                    response.value  = Response(
+                            Utils.Responses.OK,
+                            ""
+                    )
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
+
+        return response
+    }
+
+    fun getPostsByUser(uid: String): MutableLiveData<PostsResponse> {
+        val response = MutableLiveData<PostsResponse>()
+
+        root.collection("posts")
+                .whereEqualTo("owner_uid", uid)
+                .whereEqualTo("post", true).get()
+                .addOnSuccessListener {
+                    val arr = ArrayList<Post>()
+                    it.forEach { snapshot ->
+                        arr.add(snapshot.toObject(Post::class.java))
+                    }
+
+                    if (arr.isNotEmpty()) {
+                        response.value = PostsResponse(
+                                Utils.Responses.OK,
+                                arr
+                        )
+                    } else {
+                        response.value = PostsResponse(
+                                Utils.Responses.ERROR,
+                                null
+                        )
+                    }
+                }
+
         return response
     }
 }
