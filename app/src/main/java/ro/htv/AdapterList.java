@@ -1,5 +1,7 @@
 package ro.htv;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Postare> listaelem;
-
 
     public static class Viewholder extends RecyclerView.ViewHolder{
         public ImageView Im1;
@@ -39,6 +42,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_test, parent, false);
+        ////v.setOnClickListener(mOnClickListener);
         RecyclerView.ViewHolder hvs = new Viewholder(v);
         return (Viewholder) hvs;
     }
@@ -56,4 +60,5 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     public int getItemCount() {
         return listaelem.size();
     }
+
 }
