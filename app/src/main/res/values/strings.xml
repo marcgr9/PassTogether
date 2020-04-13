@@ -8,6 +8,7 @@
     <string name="password">Parola</string>
     <string name="birthday">Data nasterii</string>
     <string name="noAccount">Nu ai cont? Inregistreaza-te aici</string>
+    <string name="logOut">Log Out</string>
 
     <string name="invalidEmail">Email-ul e invalid</string>
     <string name="invalidPass">Parola e prea simpla!</string>
