@@ -5,13 +5,19 @@ public class Postare {
     public String imRezProfil;
     public String NumePrenume;
     public String Descriere;
+    public int tip;
 
-    public Postare(String imrez1, String imrez2, String Nume, String Des)
+    public int getTip() {
+        return tip;
+    }
+
+    public Postare(String imrez1, String imrez2, String Nume, String Des, int tipp)
     {
         imRezEx = imrez1;
         imRezProfil = imrez2;
         NumePrenume = Nume;
         Descriere = Des;
+        tip = tipp;
     }
 
     public String getImRezEx() {

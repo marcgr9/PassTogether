@@ -31,10 +31,10 @@ public class CometariiPostare extends AppCompatActivity {
         TextView desc = (TextView)findViewById(R.id.descriere);
         desc.setText("DEscrierea");
         ArrayList<Postare> lista = new ArrayList<>();
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe"));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe"));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe"));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe"));
+        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
+        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
+        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
+        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
         adapter = new AdapterList(lista);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

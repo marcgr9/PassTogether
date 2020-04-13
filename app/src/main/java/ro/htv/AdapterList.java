@@ -2,11 +2,14 @@ package ro.htv;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.wifi.WifiManager;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,8 +39,8 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         public ImageView Im2;
         public TextView Nume;
         public TextView Desc;
-
-
+        public RelativeLayout up;
+        public RelativeLayout down;
 
         public Viewholder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -45,6 +48,9 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             Im2 = itemView.findViewById(R.id.imagineExercitiu);
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
+            up = itemView.findViewById(R.id.up);
+            down = itemView.findViewById(R.id.down);
+            Desc.setMovementMethod(new ScrollingMovementMethod());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -73,7 +79,12 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
         Postare PostareActuala = listaelem.get(position);
 
-        ///holder.Im1.
+        if (PostareActuala.tip == 1) {
+            holder.up.setBackgroundColor(Color.parseColor("#dedd8c"));
+            holder.down.setBackgroundColor(Color.parseColor("#8cdec7"));
+        }
+        if (PostareActuala.imRezEx == null)
+            holder.Im2.setImageDrawable(null);
         holder.Nume.setText(PostareActuala.getNumePrenume());
         holder.Desc.setText(PostareActuala.getDescriere());
     }
