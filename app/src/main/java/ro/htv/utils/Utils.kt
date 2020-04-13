@@ -6,4 +6,8 @@ object Utils {
     enum class Responses {
         OK, ERROR
     }
+
+    enum class Errors {
+        EMPTY
+    }
 }

@@ -2,11 +2,13 @@ package ro.htv
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_topic_selection.*
 import ro.htv.utils.FirestoreRepository
+import ro.htv.utils.Utils
 import java.util.ArrayList
 
 class TopicSelection : AppCompatActivity() {
@@ -36,6 +38,15 @@ class TopicSelection : AppCompatActivity() {
                 errField.text = getString(R.string.invalidTopic)
             } else {
                 // bravo
+                //Log.d(TAG, autocomplete.text.toString())
+
+                val posts = firestoreRepository.getPostsByTopic(autocomplete.text.toString())
+
+                posts.observe(this, Observer {
+                    if (it.ok())
+                        Log.d(TAG, it.value.toString())
+                    else if (it.value == Utils.Errors.EMPTY) Log.d(TAG, "gol")
+                })
             }
         }
     }
