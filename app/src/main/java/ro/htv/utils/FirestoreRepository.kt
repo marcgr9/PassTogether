@@ -142,8 +142,9 @@ class FirestoreRepository {
         val response = MutableLiveData<PostsResponse>()
 
         root.collection("posts")
-                .whereEqualTo("owner_uid", uid)
-                .whereEqualTo("post", true).get()
+                .whereEqualTo("post", true)
+                .whereEqualTo("ownwer_uid", uid)
+                .get()
                 .addOnSuccessListener {
                     val arr = ArrayList<Post>()
                     it.forEach { snapshot ->
