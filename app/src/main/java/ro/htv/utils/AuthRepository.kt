@@ -52,7 +52,24 @@ class AuthRepository {
                     ""
             )
         }
+        return response
+    }
 
+    fun updatePassword(password: String): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        firebaseAuth.currentUser!!.updatePassword(password)
+                .addOnSuccessListener {
+                    response.value = Response(
+                            Utils.Responses.OK,
+                            ""
+                    )
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
 
         return response
     }

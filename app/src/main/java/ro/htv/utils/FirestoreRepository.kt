@@ -91,4 +91,31 @@ class FirestoreRepository {
 
         return response
     }
+
+    fun getUser(uid: String): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        root.collection("users").document(uid).get()
+                .addOnSuccessListener {
+                    if (it != null) {
+                        response.value = Response(
+                                Utils.Responses.OK,
+                                it!!.toObject(User::class.java)
+                        )
+                        Log.d(TAG, it.toString())
+                    } else {
+                        response.value = Response(
+                                Utils.Responses.ERROR,
+                                Utils.Errors.EMPTY
+                        )
+                    }
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
+
+        return response
+    }
 }

@@ -18,5 +18,7 @@
     <string name="search">Acceseaza</string>
     <string name="chooseTopic">Alege topicul</string>
     <string name="invalidTopic">Nu am gasit topicul ales :(</string>
+    <string name="profile">Profilul tau</string>
+    <string name="loading">Se incarca datele..</string>
 
 </resources>

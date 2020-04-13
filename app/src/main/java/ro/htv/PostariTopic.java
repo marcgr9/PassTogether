@@ -3,6 +3,7 @@ package ro.htv;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+
 import java.util.ArrayList;
 
 public class PostariTopic extends AppCompatActivity {
@@ -29,10 +31,12 @@ public class PostariTopic extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
 
     ArrayList<Post> posts = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postari_topic);
+
         recyclerView = findViewById(R.id.review);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -75,6 +79,25 @@ public class PostariTopic extends AppCompatActivity {
 
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
+                } else {
+                    // nu sunt postari
+                }
+            }
+        });
+
+    }
+
+    private void loadPosts() {
+        FirestoreRepository fs = new FirestoreRepository();
+        MutableLiveData<PostsResponse> postsReq = fs.getPostsByTopic(getIntent().getStringExtra("topic"));
+
+
+        postsReq.observe(this, new Observer<PostsResponse>() {
+            @Override
+            public void onChanged(PostsResponse postsResponse) {
+                if (postsResponse.getStatus() == Utils.Responses.OK) {
+                    posts = postsResponse.getPosts();
+                    //System.out.println(posts.size());
                 } else {
                     // nu sunt postari
                 }
