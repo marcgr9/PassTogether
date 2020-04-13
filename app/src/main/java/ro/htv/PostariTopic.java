@@ -87,22 +87,4 @@ public class PostariTopic extends AppCompatActivity {
 
     }
 
-    private void loadPosts() {
-        FirestoreRepository fs = new FirestoreRepository();
-        MutableLiveData<PostsResponse> postsReq = fs.getPostsByTopic(getIntent().getStringExtra("topic"));
-
-
-        postsReq.observe(this, new Observer<PostsResponse>() {
-            @Override
-            public void onChanged(PostsResponse postsResponse) {
-                if (postsResponse.getStatus() == Utils.Responses.OK) {
-                    posts = postsResponse.getPosts();
-                    //System.out.println(posts.size());
-                } else {
-                    // nu sunt postari
-                }
-            }
-        });
-
-    }
 }

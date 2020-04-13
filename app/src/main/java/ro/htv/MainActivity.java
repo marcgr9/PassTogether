@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -32,11 +33,20 @@ public class MainActivity extends AppCompatActivity {
 
         TextView txtView = findViewById(R.id.textView);
         Button btn = findViewById(R.id.button);
+        ImageView settings = findViewById(R.id.settingsbtn);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), TopicSelection.class));
+            }
+        });
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Settings.class);
+                startActivity((intent).putExtra("uid", uid));
             }
         });
 
