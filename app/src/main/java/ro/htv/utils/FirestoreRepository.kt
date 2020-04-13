@@ -54,4 +54,38 @@ class FirestoreRepository {
                 }
         return response
     }
+
+    fun getPostsByTopic(topic: String): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        root.collection("posts")
+                .whereEqualTo("post", true)
+                .whereEqualTo("topic", topic)
+                .get()
+                .addOnSuccessListener {
+                    val arr = ArrayList<String>()
+                    it.forEach { snapshot ->
+                        Log.d(TAG, "asd ${snapshot.data.toMap()}")
+                        arr.add(snapshot.data.toMap().toString())
+                    }
+                    if (arr.isNotEmpty()) {
+                        response.value = Response(
+                                Utils.Responses.OK,
+                                arr
+                        )
+                    } else {
+                        response.value = Response(
+                                Utils.Responses.ERROR,
+                                Utils.Errors.EMPTY
+                        )
+                    }
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
+
+        return response
+    }
 }
