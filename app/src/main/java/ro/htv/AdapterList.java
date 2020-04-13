@@ -1,6 +1,7 @@
 package ro.htv;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 import ro.htv.model.Post;
@@ -27,6 +30,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Post> listaelem;
 
     private OnItemClickListener mListener;
+    private static Context localcontext;
     public interface OnItemClickListener{
         void OnItemClick(int poz);
     }
@@ -46,6 +50,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         public Viewholder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             Im1 = itemView.findViewById(R.id.imagineUser);
+            localcontext = itemView.getContext();
             Im2 = itemView.findViewById(R.id.imagineExercitiu);
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
@@ -84,10 +89,14 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             holder.up.setBackgroundColor(Color.parseColor("#dedd8c"));
             holder.down.setBackgroundColor(Color.parseColor("#8cdec7"));
         }
-        if (PostareActuala.getLinkToImage() == null)
-            holder.Im2.setImageDrawable(null);
         holder.Nume.setText(PostareActuala.getOwner_name());
         holder.Desc.setText(PostareActuala.getText());
+        if (!PostareActuala.getLinkToImage().equals(""))  {
+            Glide.with(localcontext)
+                    .load(PostareActuala.getLinkToImage())
+                    .into(holder.Im2);
+        }
+
     }
 
     @Override

@@ -95,9 +95,15 @@ public class CometariiPostare extends AppCompatActivity {
 
     private void updateCurrentPost(Post currentPost) {
         initFloatingButton();
-        /// updateaza postarea actuala cu datele din currentPost
-
-
+        TextView nume = (TextView) findViewById(R.id.numePersoana);
+        nume.setText(currentPost.getOwner_name());
+        TextView Desc = (TextView) findViewById(R.id.descriere);
+        Desc.setText(currentPost.getText());
+        ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
+        Glide.with(this)
+                .load(currentPost.getLinkToImage())
+                .apply(new RequestOptions().override(400, 400))
+                .into(imv);
     }
 
     private void getParentPost(String id) {
