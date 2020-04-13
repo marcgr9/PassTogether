@@ -228,7 +228,7 @@ public class PostariTopic extends AppCompatActivity {
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                         @Override
                         public void OnItemClick(int poz) {
-                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", finalPost.get(poz).getIdpost()));
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", finalPost.get(poz).getIdpost()).putExtra("profileImage", userProfileImage).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()));
                         }
                     });
 

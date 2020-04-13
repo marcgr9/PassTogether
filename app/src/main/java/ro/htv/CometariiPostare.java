@@ -1,14 +1,32 @@
 package ro.htv;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -16,6 +34,7 @@ import ro.htv.model.Post;
 import ro.htv.model.PostsResponse;
 import ro.htv.model.Response;
 import ro.htv.utils.FirestoreRepository;
+import ro.htv.utils.StorageRepository;
 import ro.htv.utils.Utils;
 
 public class CometariiPostare extends AppCompatActivity {
@@ -27,21 +46,45 @@ public class CometariiPostare extends AppCompatActivity {
     private String TAG = "HackTheVirus Comentarii";
 
     private FirestoreRepository firestoreRepository;
-    private Post currentPost;
+    private StorageRepository storageRepository;
+
+    private Post currentPost = new Post();
+    private Post myComment = new Post();
+
+    private Dialog addComment;
+
+    private String uidUser;
+    private String idParent;
+    private String userProfileImage;
+    private String currentUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cometarii_postare);
 
-        final String idParent = getIntent().getExtras().getString("idPost");
+        idParent = getIntent().getExtras().getString("idPost");
+        userProfileImage = getIntent().getExtras().getString("profileImage");
+        uidUser = getIntent().getExtras().getString("uid");
+        currentUserName = getIntent().getExtras().getString("currentUserName");
+
+
+        myComment.setPost(false);
+        myComment.setParent(idParent);
+        myComment.setTimestamp("0000");
+        myComment.setOwnwer_uid(uidUser);
+        myComment.setOwner_name(currentUserName);
+
 
         Log.d(TAG, "id paret " + idParent);
 
         firestoreRepository = new FirestoreRepository();
+        storageRepository = new StorageRepository();
 
         getParentPost(idParent);
         getComments(idParent);
+
+        //initFloatingButton();
 
         recyclerView = findViewById(R.id.commview);
         recyclerView.setHasFixedSize(true);
@@ -51,6 +94,7 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void updateCurrentPost(Post currentPost) {
+        initFloatingButton();
         /// updateaza postarea actuala cu datele din currentPost
 
 
@@ -87,6 +131,151 @@ public class CometariiPostare extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void initFloatingButton() {
+        FloatingActionButton fb = findViewById(R.id.floating_action_button);
+        initCommentDialog();
+
+        fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addComment.show();
+            }
+        });
+    }
+
+    private void initCommentDialog() {
+        addComment = new Dialog(this);
+        addComment.setContentView(R.layout.popup_add_post);
+        TextView popup_title = addComment.findViewById(R.id.popup_newpost);
+        popup_title.setText(getString(R.string.commentTo) + currentPost.getOwner_name());
+
+        addComment.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addComment.getWindow().setLayout(Toolbar.LayoutParams.MATCH_PARENT,Toolbar.LayoutParams.WRAP_CONTENT);
+        addComment.getWindow().getAttributes().gravity = Gravity.TOP;
+
+        ImageView userProfilePicture = addComment.findViewById(R.id.popup_user_image);
+
+        Glide.with(this)
+                .load(userProfileImage)
+                .into(userProfilePicture);
+
+        ImageView addPhoto = addComment.findViewById(R.id.popup_addImage);
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectPicture();
+            }
+        });
+
+        ImageView post = addComment.findViewById(R.id.popup_add);
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateComment();
+            }
+        });
+    }
+
+    private void selectPicture() {
+        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), Utils.PICK_IMAGE_RC);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Utils.PICK_IMAGE_RC) {
+            String postImage = data.getData().toString();
+            //System.out.println(postImage);
+            myComment.setLinkToImage(postImage);
+            ImageView popup_image = addComment.findViewById(R.id.popup_img);
+
+            Glide.with(this)
+                    .load(postImage)
+                    .apply(new RequestOptions().override(540, 960))
+                    .into(popup_image);
+
+            popup_image.setBackground(getDrawable(R.drawable.popup_text_style));
+        }
+    }
+
+    private void validateComment() {
+        EditText post_text = addComment.findViewById(R.id.popup_description);
+
+        if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
+            myComment.setText(post_text.getText().toString());
+            myComment.setTimestamp("0000");
+
+            Log.d(TAG, myComment.toString());
+            System.out.println(myComment.getLinkToImage());
+            if (myComment.getLinkToImage().equals("")) {
+                MutableLiveData<Response> pendingPost = firestoreRepository.addPost(myComment);
+
+                pendingPost.observe(this, new Observer<Response>() {
+                    @Override
+                    public void onChanged(Response response) {
+                        if (response.ok()) {
+                            done();
+                        }
+                    }
+                });
+            } else {
+                ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.parse(myComment.getLinkToImage()));
+                try {
+                    Bitmap bitmap = ImageDecoder.decodeBitmap(source);
+                    uploadImage(bitmap);
+                } catch (Exception e) {
+                }
+            }
+        } else {
+            Log.d(TAG, "erowre");
+            TextView err = addComment.findViewById(R.id.errField);
+            err.setText(getString(R.string.postError));
+        }
+    }
+
+    private void uploadImage(Bitmap bitmap) {
+        System.out.println("ndsdifnsi");
+        final MutableLiveData<Response> pendingImage = storageRepository.uploadImage(bitmap, "post");
+        final LifecycleOwner th = this;
+        pendingImage.observe(th, new Observer<Response>() {
+            @Override
+            public void onChanged(Response response) {
+                if (response.ok()) {
+                    String downloadUrl = response.getValue().toString();
+
+                    System.out.println("am ajuns dupa poza " + downloadUrl);
+
+                    myComment.setLinkToImage(downloadUrl);
+
+                    MutableLiveData<Response> pendingPost = firestoreRepository.addPost(myComment);
+
+                    pendingPost.observe(th, new Observer<Response>() {
+                        @Override
+                        public void onChanged(Response response) {
+                            if (response.ok()) {
+                                done();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void done() {
+        addComment.hide();
+        initFloatingButton();
+        getComments(idParent);
+
+        myComment = new Post();
+
+        myComment.setPost(false);
+        myComment.setParent(idParent);
+        myComment.setTimestamp("0000");
+        myComment.setOwnwer_uid(uidUser);
+        myComment.setOwner_name(currentUserName);
     }
 
 }

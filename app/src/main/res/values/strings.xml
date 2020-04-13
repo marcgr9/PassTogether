@@ -23,5 +23,6 @@
     <string name="addPost">Postare noua</string>
     <string name="addPostHint">Descrie problema..</string>
     <string name="postError">Scrie ceva mai complex..</string>
+    <string name="commentTo">"Raspunde-i la "</string>
 
 </resources>

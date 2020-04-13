@@ -68,7 +68,7 @@
             tools:srcCompat="@tools:sample/avatars[11]" />
     </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 
-        
+
     </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
