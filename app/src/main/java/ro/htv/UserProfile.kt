@@ -276,7 +276,12 @@ class UserProfile : AppCompatActivity() {
         img.observe(this, Observer {
             if (it.ok()) {
                 Log.d(TAG, "imagine uploadata: ${it.value}")
-                done()
+                //done()
+
+                val imgUpdated = firestoreRepository.setImage(uid, it.value.toString())
+                imgUpdated.observe(this, Observer {img ->
+                    if (img) done()
+                })
 
             } else {
                 errField.text = it.value.toString()

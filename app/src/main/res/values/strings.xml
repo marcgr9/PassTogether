@@ -21,5 +21,8 @@
     <string name="invalidTopic">Nu am gasit topicul ales :(</string>
     <string name="profile">Profilul tau</string>
     <string name="loading">Se incarca datele..</string>
+    <string name="addPost">Postare noua</string>
+    <string name="addPostHint">Descrie problema..</string>
+    <string name="postError">Scrie ceva mai complex..</string>
 
 </resources>
