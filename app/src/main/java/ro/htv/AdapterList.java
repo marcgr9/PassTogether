@@ -10,29 +10,52 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import ro.htv.model.PostsResponse;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Postare> listaelem;
 
-    public static class Viewholder extends RecyclerView.ViewHolder{
+    private OnItemClickListener mListener;
+    public interface OnItemClickListener{
+        void OnItemClick(int poz);
+    }
+    void setOnItemClick(OnItemClickListener listener)
+    {
+        mListener = listener;
+    }
+
+    public static class Viewholder extends RecyclerView.ViewHolder  {
         public ImageView Im1;
         public ImageView Im2;
         public TextView Nume;
         public TextView Desc;
 
 
-        public Viewholder(@NonNull View itemView) {
+
+        public Viewholder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             Im1 = itemView.findViewById(R.id.imagineUser);
             Im2 = itemView.findViewById(R.id.imagineExercitiu);
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int pos = getAdapterPosition();
+                        listener.OnItemClick(pos);
+                    }
+                }
+            });
         }
+
     }
     public AdapterList (ArrayList<Postare>lista)
     {
@@ -42,8 +65,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_test, parent, false);
-        ////v.setOnClickListener(mOnClickListener);
-        RecyclerView.ViewHolder hvs = new Viewholder(v);
+        RecyclerView.ViewHolder hvs = new Viewholder(v, mListener);
         return (Viewholder) hvs;
     }
 
