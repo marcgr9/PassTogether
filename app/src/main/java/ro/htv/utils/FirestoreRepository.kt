@@ -8,6 +8,8 @@ import ro.htv.model.Post
 import ro.htv.model.PostsResponse
 import ro.htv.model.Response
 import ro.htv.model.User
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FirestoreRepository {
 
@@ -124,6 +126,8 @@ class FirestoreRepository {
         val response = MutableLiveData<Response>()
         var incrementKarma = false
         if (!post.post) incrementKarma = true
+
+        post.timestamp = (Date().time / 1000).toString()
 
         root.collection("posts").add(post)
                 .addOnSuccessListener {
