@@ -36,5 +36,6 @@
     <string name="karma">Karma</string>
     <string name="postsAndComments">Postari si comentarii</string>
     <string name="numberOfPosts">%1$s postari / %2$s comentarii</string>
+    <string name="yearsSince">%1$s ani</string>
 
 </resources>

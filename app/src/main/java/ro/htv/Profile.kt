@@ -85,7 +85,7 @@ class Profile : AppCompatActivity() {
             profilePicture.visibility = this
         }
 
-        age.setText(target.birthday)
+        age.setText(getString(R.string.yearsSince, Utils.yearsSince(target.birthday)))
         karma.setText(target.karma.toString())
 
 
