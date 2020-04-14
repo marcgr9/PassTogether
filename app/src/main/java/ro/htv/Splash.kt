@@ -23,7 +23,7 @@ class Splash : AppCompatActivity() {
 
             user.observe(this, Observer {
                 if (it.ok()) {
-                    startActivity(Intent(this, MainActivity::class.java).putExtra("uid", it.value.toString()))
+                    startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", it.value.toString()))
                 } else {
                     startActivity(Intent(this, Login::class.java))
                 }

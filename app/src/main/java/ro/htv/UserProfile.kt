@@ -292,7 +292,7 @@ class UserProfile : AppCompatActivity() {
 
     private fun done() {
         pass.setText("")
-        startActivity(Intent(this, MainActivity::class.java).putExtra("uid", uid!!))
+        startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", uid!!))
         Toast.makeText(this, "profil updatat", Toast.LENGTH_SHORT).show()
     }
 }

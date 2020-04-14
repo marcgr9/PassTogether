@@ -26,5 +26,6 @@
     <string name="postError">Scrie ceva mai complex..</string>
     <string name="commentTo">"Raspunde-i la "</string>
     <string name="comments">Comentarii</string>
+    <string name="settings">Setari</string>
 
 </resources>
