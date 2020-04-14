@@ -29,5 +29,6 @@
     <string name="commentTo">"Raspunde-i la "</string>
     <string name="comments">Comentarii</string>
     <string name="settings">Setari</string>
+    <string name="showMyPosts">Arata postarile mele</string>
 
 </resources>
