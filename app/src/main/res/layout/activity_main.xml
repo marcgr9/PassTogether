@@ -38,4 +38,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView"/>
 
+    <ImageView
+        android:id="@+id/settingsbtn"
+        android:layout_width="104dp"
+        android:layout_height="95dp"
+        android:src="@drawable/settings"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
