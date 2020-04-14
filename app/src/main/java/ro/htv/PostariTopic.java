@@ -81,8 +81,10 @@ public class PostariTopic extends AppCompatActivity {
                         post.setTopic(topic);
                         post.setOwnwer_uid(uid);
                         post.setOwner_name(((User) response.getValue()).getName());
-                        userProfileImage = ((User) response.getValue()).getProfileImage();
+                        post.setOwner_profilePicture(((User) response.getValue()).getProfileImage());
+                        Log.d(TAG, post.getOwner_profilePicture());
                         initPopup();
+                        loadPosts();
                     }
 
                 }
@@ -94,10 +96,6 @@ public class PostariTopic extends AppCompatActivity {
         recyclerView = findViewById(R.id.review);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        loadPosts();
-        System.out.println("Merge pana la 1");
-
-
 
         FloatingActionButton mb = findViewById(R.id.floating_action_button);
         mb.setOnClickListener(new View.OnClickListener() {
@@ -127,17 +125,16 @@ public class PostariTopic extends AppCompatActivity {
             }
         });
 
-        ImageView post = addPost.findViewById(R.id.popup_add);
-        post.setOnClickListener(new View.OnClickListener() {
+        ImageView postButton = addPost.findViewById(R.id.popup_add);
+        postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validatePost();
             }
         });
 
-        System.out.println(userProfileImage);
         Glide.with(getBaseContext())
-                .load(userProfileImage)
+                .load(post.getOwner_profilePicture())
                 .into(popup_user_icon);
 
     }
@@ -178,6 +175,18 @@ public class PostariTopic extends AppCompatActivity {
     }
 
     private void done() {
+        posts.add(post);
+        adapter = new AdapterList(posts);
+
+        adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int poz) {
+                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()));
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+
         addPost.hide();
         initPopup();
 
@@ -217,18 +226,14 @@ public class PostariTopic extends AppCompatActivity {
             @Override
             public void onChanged(PostsResponse postsResponse) {
                 if (postsResponse.getStatus() == Utils.Responses.OK) {
-                    ArrayList<Post> lista = new ArrayList<>();
-
                     posts = postsResponse.getPosts();
-                    lista = posts;
 
-                    final ArrayList<Post> finalPost = lista;
-
-                    adapter = new AdapterList(lista);
+                    adapter = new AdapterList(posts);
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                         @Override
                         public void OnItemClick(int poz) {
-                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", finalPost.get(poz).getIdpost()).putExtra("profileImage", userProfileImage).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()));
+                            Log.d(TAG, post.getOwner_profilePicture());
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()));
                         }
                     });
 

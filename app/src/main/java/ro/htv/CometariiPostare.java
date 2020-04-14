@@ -51,12 +51,15 @@ public class CometariiPostare extends AppCompatActivity {
     private Post currentPost = new Post();
     private Post myComment = new Post();
 
+    private ArrayList<Post> listOfPosts;
+
     private Dialog addComment;
 
     private String uidUser;
     private String idParent;
     private String userProfileImage;
     private String currentUserName;
+    private String currentUserProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +68,11 @@ public class CometariiPostare extends AppCompatActivity {
 
         idParent = getIntent().getExtras().getString("idPost");
         userProfileImage = getIntent().getExtras().getString("profileImage");
+        currentUserProfileImage = getIntent().getExtras().getString("currentUserProfileImage");
         uidUser = getIntent().getExtras().getString("uid");
         currentUserName = getIntent().getExtras().getString("currentUserName");
 
-
-        myComment.setPost(false);
-        myComment.setParent(idParent);
-        myComment.setTimestamp("0000");
-        myComment.setOwnwer_uid(uidUser);
-        myComment.setOwner_name(currentUserName);
-
+        initEmptyComment();
 
         Log.d(TAG, "id paret " + idParent);
 
@@ -95,15 +93,24 @@ public class CometariiPostare extends AppCompatActivity {
 
     private void updateCurrentPost(Post currentPost) {
         initFloatingButton();
+
         TextView nume = (TextView) findViewById(R.id.numePersoana);
-        nume.setText(currentPost.getOwner_name());
         TextView Desc = (TextView) findViewById(R.id.descriere);
-        Desc.setText(currentPost.getText());
         ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
+        ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
+
+        nume.setText(currentPost.getOwner_name());
+        Desc.setText(currentPost.getText());
+
         Glide.with(this)
                 .load(currentPost.getLinkToImage())
                 .apply(new RequestOptions().override(400, 400))
                 .into(imv);
+
+        Glide.with(this)
+                .load(currentPost.getOwner_profilePicture())
+                .circleCrop()
+                .into(postOwnerProfilePicture);
     }
 
     private void getParentPost(String id) {
@@ -130,7 +137,7 @@ public class CometariiPostare extends AppCompatActivity {
             public void onChanged(PostsResponse response) {
                 if (response.getStatus() == Utils.Responses.OK) {
                     System.out.println(response.getPosts().size());
-                    ArrayList<Post> listOfPosts = response.getPosts();
+                    listOfPosts = response.getPosts();
                     adapter = new AdapterList(listOfPosts);
 
                     recyclerView.setAdapter(adapter);
@@ -163,8 +170,9 @@ public class CometariiPostare extends AppCompatActivity {
 
         ImageView userProfilePicture = addComment.findViewById(R.id.popup_user_image);
 
+        Log.d(TAG, currentUserProfileImage);
         Glide.with(this)
-                .load(userProfileImage)
+                .load(currentUserProfileImage)
                 .into(userProfilePicture);
 
         ImageView addPhoto = addComment.findViewById(R.id.popup_addImage);
@@ -211,7 +219,6 @@ public class CometariiPostare extends AppCompatActivity {
 
         if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
             myComment.setText(post_text.getText().toString());
-            myComment.setTimestamp("0000");
 
             Log.d(TAG, myComment.toString());
             System.out.println(myComment.getLinkToImage());
@@ -271,17 +278,26 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void done() {
+        listOfPosts.add(myComment);
+        adapter = new AdapterList(listOfPosts);
+        recyclerView.setAdapter(adapter);
+
         addComment.hide();
         initFloatingButton();
-        getComments(idParent);
+        //getComments(idParent);
 
         myComment = new Post();
 
+        initEmptyComment();
+    }
+
+    private void initEmptyComment() {
         myComment.setPost(false);
         myComment.setParent(idParent);
         myComment.setTimestamp("0000");
         myComment.setOwnwer_uid(uidUser);
         myComment.setOwner_name(currentUserName);
+        myComment.setOwner_profilePicture(currentUserProfileImage);
     }
 
 }

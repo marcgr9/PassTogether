@@ -1,10 +1,7 @@
 package ro.htv;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.wifi.WifiManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -22,9 +18,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import ro.htv.model.Post;
-import ro.htv.model.PostsResponse;
-
-import static androidx.core.content.ContextCompat.startActivity;
 
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Post> listaelem;
@@ -96,6 +89,11 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
                     .load(PostareActuala.getLinkToImage())
                     .into(holder.Im2);
         }
+
+        Glide.with(localcontext)
+                .load(PostareActuala.getOwner_profilePicture())
+                .circleCrop()
+                .into(holder.Im1);
 
     }
 
