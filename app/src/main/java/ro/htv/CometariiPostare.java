@@ -23,11 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class CometariiPostare extends AppCompatActivity {
     private RecyclerView recyclerView ;
     private AdapterList adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private RelativeLayout relativeLayout;
 
     private String TAG = "HackTheVirus Comentarii";
 
@@ -95,10 +98,9 @@ public class CometariiPostare extends AppCompatActivity {
         getComments(idParent);
 
         //initFloatingButton();
-
+        relativeLayout = findViewById(R.id.Cardpost);
         recyclerView = findViewById(R.id.commview);
         recyclerView.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
     }
@@ -119,7 +121,7 @@ public class CometariiPostare extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateCurrentPost(Post currentPost) {
+    private void updateCurrentPost(final Post currentPost) {
         initFloatingButton();
 
         TextView nume = (TextView) findViewById(R.id.numePersoana);
@@ -174,7 +176,6 @@ public class CometariiPostare extends AppCompatActivity {
                     System.out.println(response.getPosts().size());
                     listOfPosts = response.getPosts();
                     adapter = new AdapterList(listOfPosts);
-
                     recyclerView.setAdapter(adapter);
                 }
             }
@@ -341,5 +342,6 @@ public class CometariiPostare extends AppCompatActivity {
 
         Log.d(TAG, "user karma ii " + userKarma);
     }
+
 
 }
