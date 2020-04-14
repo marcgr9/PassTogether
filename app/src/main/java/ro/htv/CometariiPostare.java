@@ -106,7 +106,7 @@ public class CometariiPostare extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.settingsBtn) {
-            startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uidUser));
+            startActivity(new Intent(getBaseContext(), Settings.class).putExtra("uid", uidUser));
             return true;
         }
 

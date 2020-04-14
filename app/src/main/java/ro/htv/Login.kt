@@ -32,6 +32,10 @@ class Login : AppCompatActivity() {
         noAccount.setOnClickListener {
             startActivity(Intent(this, Register::class.java))
         }
+
+        resetPassword.setOnClickListener {
+            startActivity(Intent(this, ResetPassword::class.java))
+        }
     }
 
     fun login() {

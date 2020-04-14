@@ -23,9 +23,8 @@ import ro.htv.utils.Utils;
 
 public class Settings extends AppCompatActivity {
 
-    Button logout_btn;
-    Button profile_btn;
-    //si postarile
+    private Button logout_btn;
+    private Button profile_btn;
 
     private RecyclerView recyclerView ;
     private AdapterList adapter;
@@ -72,6 +71,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 AuthRepository as = new AuthRepository();
                 as.logout();
+
                 startActivity(new Intent(Settings.this, Login.class));
             }
         });
@@ -79,7 +79,8 @@ public class Settings extends AppCompatActivity {
         profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uid));
+                startActivity(new Intent(getBaseContext(), UserProfile.class)
+                        .putExtra("uid", uid));
             }
         });
     }
@@ -92,12 +93,12 @@ public class Settings extends AppCompatActivity {
                 public void onChanged(PostsResponse postsResponse) {
                     if (postsResponse.getStatus() == Utils.Responses.OK) {
                         posts = postsResponse.getPosts();
-                        adapter = new AdapterList(posts);
 
+                        adapter = new AdapterList(posts);
                         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                             @Override
                             public void OnItemClick(int poz) {
-                                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserName", user.getName()));
+                                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserProfileImage", user.getProfileImage()).putExtra("currentUserName", user.getName()));
                             }
                         });
 
@@ -110,5 +111,6 @@ public class Settings extends AppCompatActivity {
             });
 
         }
+
     }
 
