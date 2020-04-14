@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_topic_selection.*
+import ro.htv.model.User
 import ro.htv.utils.FirestoreRepository
 import java.util.*
 
@@ -29,6 +30,16 @@ class TopicSelection : AppCompatActivity() {
         uid = intent.getStringExtra("uid")!!
 
         firestoreRepository = FirestoreRepository()
+
+        val userPending = firestoreRepository.getUser(uid)
+        userPending.observe(this, Observer {
+            if (it.ok()) {
+                val user = it.value as User
+                hello.text = getString(R.string.hello, user.name)
+            } else {
+                hello.text = getString(R.string.hello, "")
+            }
+        })
 
         val topics: MutableLiveData<ArrayList<String>> = firestoreRepository.getTopics() // ma pis pe el error handling
 

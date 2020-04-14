@@ -127,6 +127,7 @@ public class CometariiPostare extends AppCompatActivity {
         ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
         ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
         TextView date = findViewById(R.id.data);
+
         TextView karma = findViewById(R.id.karma);
 
         Date time = new Date((long)Integer.parseInt(currentPost.getTimestamp())*1000);

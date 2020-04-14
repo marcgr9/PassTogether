@@ -30,5 +30,7 @@
     <string name="comments">Comentarii</string>
     <string name="settings">Setari</string>
     <string name="showMyPosts">Arata postarile mele</string>
+    <string name="noPosts">Nu ai nicio postare</string>
+    <string name="hello">Salut %1$s,\nLa ce vrei sa te pregatesti?</string>
 
 </resources>
