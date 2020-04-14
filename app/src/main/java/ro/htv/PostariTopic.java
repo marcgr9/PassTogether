@@ -40,6 +40,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PostariTopic extends AppCompatActivity {
 
@@ -122,7 +123,7 @@ public class PostariTopic extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.settingsBtn) {
-            startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uid));
+            startActivity(new Intent(getBaseContext(), Settings.class).putExtra("uid", uid));
             return true;
         }
 
@@ -178,6 +179,10 @@ public class PostariTopic extends AppCompatActivity {
                     public void onChanged(Response response) {
                         if (response.ok()) {
                             done();
+                            loadPosts();
+                            TextView tvv = (TextView)findViewById(R.id.lipsaPostari);
+                            tvv.setVisibility(View.INVISIBLE);
+
                         }
                     }
                 });
@@ -199,7 +204,6 @@ public class PostariTopic extends AppCompatActivity {
     private void done() {
         posts.add(post);
         adapter = new AdapterList(posts);
-
         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
             @Override
             public void OnItemClick(int poz) {
@@ -216,7 +220,6 @@ public class PostariTopic extends AppCompatActivity {
         post.setOwnwer_uid(uid);
         post.setTopic(topic);
     }
-
     private void selectPicture() {
         startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), Utils.PICK_IMAGE_RC);
     }
@@ -262,7 +265,8 @@ public class PostariTopic extends AppCompatActivity {
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
                 } else {
-                    // nu sunt postari
+                    TextView tvv = (TextView)findViewById(R.id.lipsaPostari);
+                    tvv.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -290,6 +294,7 @@ public class PostariTopic extends AppCompatActivity {
                         public void onChanged(Response response) {
                             if (response.ok()) {
                                 done();
+                                loadPosts();
                             }
                         }
                     });

@@ -96,7 +96,7 @@ class Register : AppCompatActivity() {
                                 val bitmap = ImageDecoder.decodeBitmap(source)
 
                                 uploadImage(bitmap, it.value.toString())
-                            } else startActivity(Intent(this, MainActivity::class.java).putExtra("uid", it.value.toString()))
+                            } else startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", it.value.toString()))
                         } else {
                             Log.d(TAG, "eroare la creare doc user ${it.value}")
                             errField.text = it.value.toString()
@@ -164,7 +164,7 @@ class Register : AppCompatActivity() {
                 val linkSetat = firestoreRepository.setImage(uid, it.value.toString())
 
                 linkSetat.observe(this, Observer {link ->
-                    if (link) startActivity(Intent(this, MainActivity::class.java).putExtra("uid", uid))
+                    if (link) startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", uid))
                     else {
                         // ma pis pe el
                     }

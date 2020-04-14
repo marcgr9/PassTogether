@@ -32,6 +32,10 @@ class Login : AppCompatActivity() {
         noAccount.setOnClickListener {
             startActivity(Intent(this, Register::class.java))
         }
+
+        resetPassword.setOnClickListener {
+            startActivity(Intent(this, ResetPassword::class.java))
+        }
     }
 
     fun login() {
@@ -47,7 +51,7 @@ class Login : AppCompatActivity() {
         user.observe(this, Observer {
             if (it.ok()) {
                 Log.d(TAG, "user logat cu uid ${it.value}")
-                startActivity(Intent(this, MainActivity::class.java).putExtra("uid", it.value.toString()))
+                startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", it.value.toString()))
             } else {
                 errField.text = it.value.toString()
             }

@@ -60,7 +60,7 @@ class TopicSelection : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.settingsBtn) {
-            startActivity(Intent(baseContext, UserProfile::class.java).putExtra("uid", uid))
+            startActivity(Intent(baseContext, Settings::class.java).putExtra("uid", uid))
             return true
         }
         return super.onOptionsItemSelected(item)
