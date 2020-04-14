@@ -1,17 +1,16 @@
 package ro.htv
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_topic_selection.*
-import ro.htv.model.User
 import ro.htv.utils.FirestoreRepository
-import ro.htv.utils.Utils
-import java.util.ArrayList
+import java.util.*
 
 class TopicSelection : AppCompatActivity() {
 
@@ -24,6 +23,8 @@ class TopicSelection : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topic_selection)
+
+        setSupportActionBar(my_toolbar)
 
         uid = intent.getStringExtra("uid")!!
 
@@ -50,5 +51,18 @@ class TopicSelection : AppCompatActivity() {
 
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.settingsBtn) {
+            startActivity(Intent(baseContext, UserProfile::class.java).putExtra("uid", uid))
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

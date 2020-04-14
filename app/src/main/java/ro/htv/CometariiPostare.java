@@ -1,15 +1,43 @@
 package ro.htv;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ImageDecoder;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 import ro.htv.model.Post;
+import ro.htv.model.PostsResponse;
+import ro.htv.model.Response;
+import ro.htv.utils.FirestoreRepository;
+import ro.htv.utils.StorageRepository;
+import ro.htv.utils.Utils;
 
 public class CometariiPostare extends AppCompatActivity {
 
@@ -17,30 +45,281 @@ public class CometariiPostare extends AppCompatActivity {
     private AdapterList adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private String TAG = "HackTheVirus Comentarii";
+
+    private FirestoreRepository firestoreRepository;
+    private StorageRepository storageRepository;
+
+    private Post currentPost = new Post();
+    private Post myComment = new Post();
+
+    private ArrayList<Post> listOfPosts;
+
+    private Dialog addComment;
+
+    private String uidUser;
+    private String idParent;
+    private String userProfileImage;
+    private String currentUserName;
+    private String currentUserProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cometarii_postare);
+
+        androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(getString(R.string.comments));
+        setSupportActionBar(myToolbar);
+
+        idParent = getIntent().getExtras().getString("idPost");
+        userProfileImage = getIntent().getExtras().getString("profileImage");
+        currentUserProfileImage = getIntent().getExtras().getString("currentUserProfileImage");
+        uidUser = getIntent().getExtras().getString("uid");
+        currentUserName = getIntent().getExtras().getString("currentUserName");
+
+        initEmptyComment();
+
+        Log.d(TAG, "id paret " + idParent);
+
+        firestoreRepository = new FirestoreRepository();
+        storageRepository = new StorageRepository();
+
+        getParentPost(idParent);
+        getComments(idParent);
+
+        //initFloatingButton();
+
         recyclerView = findViewById(R.id.commview);
         recyclerView.setHasFixedSize(true);
+
         layoutManager = new LinearLayoutManager(this);
-        TryFill();
-        TextView tv = (TextView)findViewById(R.id.numePersoana);
-        tv.setText("Merge Asta");
-        TextView desc = (TextView)findViewById(R.id.descriere);
-        desc.setText("DEscrierea");
-        ArrayList<Postare> lista = new ArrayList<>();
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        lista.add(new Postare("", "", "DORIn DobResCu", "DeScrIeRe", 1));
-        adapter = new AdapterList(lista);
         recyclerView.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settingsBtn) {
+            startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uidUser));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void updateCurrentPost(Post currentPost) {
+        initFloatingButton();
+
+        TextView nume = (TextView) findViewById(R.id.numePersoana);
+        TextView Desc = (TextView) findViewById(R.id.descriere);
+        ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
+        ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
+
+        nume.setText(currentPost.getOwner_name());
+        Desc.setText(currentPost.getText());
+
+        Glide.with(this)
+                .load(currentPost.getLinkToImage())
+                .apply(new RequestOptions().override(400, 400))
+                .into(imv);
+
+        Glide.with(this)
+                .load(currentPost.getOwner_profilePicture())
+                .circleCrop()
+                .into(postOwnerProfilePicture);
+    }
+
+    private void getParentPost(String id) {
+        MutableLiveData<Response> parentPost = firestoreRepository.getPostById(id);
+        parentPost.observe(this, new Observer<Response>() {
+            @Override
+            public void onChanged(Response response) {
+                if (response.ok()) {
+                    if (response.getValue() instanceof Post) {
+                        currentPost = (Post) response.getValue();
+                        Log.d(TAG, currentPost.toString());
+
+                        updateCurrentPost(currentPost);
+                    }
+                }
+            }
+        });
+    }
+
+    private void getComments(String id) {
+        MutableLiveData<PostsResponse> comments = firestoreRepository.getPostsByParentId(id);
+        comments.observe(this, new Observer<PostsResponse>() {
+            @Override
+            public void onChanged(PostsResponse response) {
+                if (response.getStatus() == Utils.Responses.OK) {
+                    System.out.println(response.getPosts().size());
+                    listOfPosts = response.getPosts();
+                    adapter = new AdapterList(listOfPosts);
+
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+        });
+    }
+
+    private void initFloatingButton() {
+        FloatingActionButton fb = findViewById(R.id.floating_action_button);
+        initCommentDialog();
+
+        fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addComment.show();
+            }
+        });
+    }
+
+    private void initCommentDialog() {
+        addComment = new Dialog(this);
+        addComment.setContentView(R.layout.popup_add_post);
+        TextView popup_title = addComment.findViewById(R.id.popup_newpost);
+        popup_title.setText(getString(R.string.commentTo) + currentPost.getOwner_name());
+
+        addComment.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        addComment.getWindow().setLayout(Toolbar.LayoutParams.MATCH_PARENT,Toolbar.LayoutParams.WRAP_CONTENT);
+        addComment.getWindow().getAttributes().gravity = Gravity.TOP;
+
+        ImageView userProfilePicture = addComment.findViewById(R.id.popup_user_image);
+
+        Log.d(TAG, currentUserProfileImage);
+        Glide.with(this)
+                .load(currentUserProfileImage)
+                .into(userProfilePicture);
+
+        ImageView addPhoto = addComment.findViewById(R.id.popup_addImage);
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectPicture();
+            }
+        });
+
+        ImageView post = addComment.findViewById(R.id.popup_add);
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateComment();
+            }
+        });
+    }
+
+    private void selectPicture() {
+        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), Utils.PICK_IMAGE_RC);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Utils.PICK_IMAGE_RC) {
+            String postImage = data.getData().toString();
+            //System.out.println(postImage);
+            myComment.setLinkToImage(postImage);
+            ImageView popup_image = addComment.findViewById(R.id.popup_img);
+
+            Glide.with(this)
+                    .load(postImage)
+                    .apply(new RequestOptions().override(540, 960))
+                    .into(popup_image);
+
+            popup_image.setBackground(getDrawable(R.drawable.popup_text_style));
+        }
+    }
+
+    private void validateComment() {
+        EditText post_text = addComment.findViewById(R.id.popup_description);
+
+        if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
+            myComment.setText(post_text.getText().toString());
+
+            Log.d(TAG, myComment.toString());
+            System.out.println(myComment.getLinkToImage());
+            if (myComment.getLinkToImage().equals("")) {
+                MutableLiveData<Response> pendingPost = firestoreRepository.addPost(myComment);
+
+                pendingPost.observe(this, new Observer<Response>() {
+                    @Override
+                    public void onChanged(Response response) {
+                        if (response.ok()) {
+                            done();
+                        }
+                    }
+                });
+            } else {
+                ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.parse(myComment.getLinkToImage()));
+                try {
+                    Bitmap bitmap = ImageDecoder.decodeBitmap(source);
+                    uploadImage(bitmap);
+                } catch (Exception e) {
+                }
+            }
+        } else {
+            Log.d(TAG, "erowre");
+            TextView err = addComment.findViewById(R.id.errField);
+            err.setText(getString(R.string.postError));
+        }
+    }
+
+    private void uploadImage(Bitmap bitmap) {
+        System.out.println("ndsdifnsi");
+        final MutableLiveData<Response> pendingImage = storageRepository.uploadImage(bitmap, "post");
+        final LifecycleOwner th = this;
+        pendingImage.observe(th, new Observer<Response>() {
+            @Override
+            public void onChanged(Response response) {
+                if (response.ok()) {
+                    String downloadUrl = response.getValue().toString();
+
+                    System.out.println("am ajuns dupa poza " + downloadUrl);
+
+                    myComment.setLinkToImage(downloadUrl);
+
+                    MutableLiveData<Response> pendingPost = firestoreRepository.addPost(myComment);
+
+                    pendingPost.observe(th, new Observer<Response>() {
+                        @Override
+                        public void onChanged(Response response) {
+                            if (response.ok()) {
+                                done();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void done() {
+        listOfPosts.add(myComment);
+        adapter = new AdapterList(listOfPosts);
         recyclerView.setAdapter(adapter);
+
+        addComment.hide();
+        initFloatingButton();
+        //getComments(idParent);
+
+        myComment = new Post();
+
+        initEmptyComment();
     }
-    void TryFill()
-    {
-        ;
+
+    private void initEmptyComment() {
+        myComment.setPost(false);
+        myComment.setParent(idParent);
+        myComment.setTimestamp("0000");
+        myComment.setOwnwer_uid(uidUser);
+        myComment.setOwner_name(currentUserName);
+        myComment.setOwner_profilePicture(currentUserProfileImage);
     }
+
 }

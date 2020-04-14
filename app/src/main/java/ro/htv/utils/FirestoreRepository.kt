@@ -124,6 +124,7 @@ class FirestoreRepository {
 
         root.collection("posts").add(post)
                 .addOnSuccessListener {
+                    root.collection("posts").document(it.id).update("idpost", it.id)
                     response.value  = Response(
                             Utils.Responses.OK,
                             ""
@@ -137,6 +138,53 @@ class FirestoreRepository {
 
         return response
     }
+
+    fun getPostsByParentId(id: String): MutableLiveData<PostsResponse> {
+        val response = MutableLiveData<PostsResponse>()
+
+        root.collection("posts")
+                .whereEqualTo("post", false)
+                .whereEqualTo("parent", id).get()
+                .addOnSuccessListener {
+                    val arr = ArrayList<Post>()
+                    it.forEach { snapshot ->
+                        Log.d(TAG, "am gaasit")
+                        arr.add(snapshot.toObject(Post::class.java))
+                    }
+
+                    response.value = PostsResponse(
+                            Utils.Responses.OK,
+                            arr
+                    )
+                }.addOnFailureListener {
+                    response.value = PostsResponse(
+                            Utils.Responses.ERROR,
+                            null
+                    )
+                }
+
+        return response
+    }
+
+    fun getPostById(id: String): MutableLiveData<Response> {
+        val response = MutableLiveData<Response>()
+
+        root.collection("posts").document(id).get()
+                .addOnSuccessListener {
+                    response.value = Response(
+                            Utils.Responses.OK,
+                            it.toObject(Post::class.java)
+                    )
+                }.addOnFailureListener {
+                    response.value = Response(
+                            Utils.Responses.ERROR,
+                            it.message
+                    )
+                }
+
+        return response
+    }
+
 
     fun getPostsByUser(uid: String): MutableLiveData<PostsResponse> {
         val response = MutableLiveData<PostsResponse>()

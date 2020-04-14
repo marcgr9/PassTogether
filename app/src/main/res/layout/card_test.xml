@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:background="#FFFEA1"
@@ -46,7 +46,7 @@
 
     <com.google.android.material.circularreveal.CircularRevealRelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="75dp"
+        android:layout_below="@+id/up"
         android:id="@+id/down"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
@@ -60,15 +60,17 @@
             android:layout_height="wrap_content"/>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="355dp"
             android:id="@+id/imagineExercitiu"
-            android:layout_height="200dp"
-            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/descriere"
-            tools:srcCompat="@tools:sample/avatars[11]" />
+            android:padding="15dp" />
     </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 
-        
+
     </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

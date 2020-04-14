@@ -27,6 +27,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -71,6 +73,10 @@ public class PostariTopic extends AppCompatActivity {
         topic = getIntent().getStringExtra("topic");
         uid = getIntent().getStringExtra("uid");
 
+        androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(topic);
+        setSupportActionBar(myToolbar);
+
         MutableLiveData<Response> userData = firestoreRepository.getUser(uid);
 
         userData.observe(this, new Observer<Response>() {
@@ -81,8 +87,10 @@ public class PostariTopic extends AppCompatActivity {
                         post.setTopic(topic);
                         post.setOwnwer_uid(uid);
                         post.setOwner_name(((User) response.getValue()).getName());
-                        userProfileImage = ((User) response.getValue()).getProfileImage();
+                        post.setOwner_profilePicture(((User) response.getValue()).getProfileImage());
+                        Log.d(TAG, post.getOwner_profilePicture());
                         initPopup();
+                        loadPosts();
                     }
 
                 }
@@ -94,10 +102,6 @@ public class PostariTopic extends AppCompatActivity {
         recyclerView = findViewById(R.id.review);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        loadPosts();
-        System.out.println("Merge pana la 1");
-
-
 
         FloatingActionButton mb = findViewById(R.id.floating_action_button);
         mb.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +111,22 @@ public class PostariTopic extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settingsBtn) {
+            startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uid));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initPopup() {
@@ -127,17 +147,16 @@ public class PostariTopic extends AppCompatActivity {
             }
         });
 
-        ImageView post = addPost.findViewById(R.id.popup_add);
-        post.setOnClickListener(new View.OnClickListener() {
+        ImageView postButton = addPost.findViewById(R.id.popup_add);
+        postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validatePost();
             }
         });
 
-        System.out.println(userProfileImage);
         Glide.with(getBaseContext())
-                .load(userProfileImage)
+                .load(post.getOwner_profilePicture())
                 .into(popup_user_icon);
 
     }
@@ -178,6 +197,18 @@ public class PostariTopic extends AppCompatActivity {
     }
 
     private void done() {
+        posts.add(post);
+        adapter = new AdapterList(posts);
+
+        adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int poz) {
+                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()));
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+
         addPost.hide();
         initPopup();
 
@@ -217,19 +248,14 @@ public class PostariTopic extends AppCompatActivity {
             @Override
             public void onChanged(PostsResponse postsResponse) {
                 if (postsResponse.getStatus() == Utils.Responses.OK) {
-                    ArrayList<Postare> lista = new ArrayList<>();
-
                     posts = postsResponse.getPosts();
-                    for(Post X: posts)
-                    {
-                        lista.add(new Postare(X.getLinkToImage(),X.getLinkToImage(),X.getOwner_name(), X.getText(), 1));
-                    }
 
-                    adapter = new AdapterList(lista);
+                    adapter = new AdapterList(posts);
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                         @Override
                         public void OnItemClick(int poz) {
-                            startActivity(new Intent(getBaseContext(), CometariiPostare.class));
+                            Log.d(TAG, post.getOwner_profilePicture());
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()));
                         }
                     });
 
