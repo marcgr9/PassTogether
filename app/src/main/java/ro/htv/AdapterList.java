@@ -17,8 +17,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import kotlin.jvm.JvmStatic;
 import ro.htv.model.Post;
+import ro.htv.utils.Utils;
 
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Post> listaelem;
@@ -38,6 +41,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         public ImageView Im2;
         public TextView Nume;
         public TextView Desc;
+        public TextView dataa;
         public RelativeLayout up;
         public RelativeLayout down;
         public RelativeLayout Tot;
@@ -52,6 +56,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             up = itemView.findViewById(R.id.SUUS);
             down = itemView.findViewById(R.id.down);
             Tot = itemView.findViewById(R.id.Cardpost);
+            dataa = itemView.findViewById(R.id.data);
             Desc.setMovementMethod(new ScrollingMovementMethod());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,6 +97,8 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         }
         holder.Nume.setText(PostareActuala.getOwner_name());
         holder.Desc.setText(PostareActuala.getText());
+        Date time = new Date((long)Integer.parseInt(PostareActuala.getTimestamp())*1000);
+        holder.dataa.setText(time.toString());
         if (PostareActuala.getPost() == true)
         if (!PostareActuala.getLinkToImage().equals(""))  {
             Glide.with(localcontext)
