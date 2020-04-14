@@ -66,6 +66,10 @@ public class CometariiPostare extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cometarii_postare);
 
+        androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(getString(R.string.comments));
+        setSupportActionBar(myToolbar);
+
         idParent = getIntent().getExtras().getString("idPost");
         userProfileImage = getIntent().getExtras().getString("profileImage");
         currentUserProfileImage = getIntent().getExtras().getString("currentUserProfileImage");

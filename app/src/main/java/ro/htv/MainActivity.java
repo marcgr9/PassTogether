@@ -1,6 +1,7 @@
 package ro.htv;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import ro.htv.utils.AuthRepository;
 import ro.htv.utils.FirestoreRepository;
 
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "main");
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         // sa ma pis pe el java
 

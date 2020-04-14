@@ -71,6 +71,10 @@ public class PostariTopic extends AppCompatActivity {
         topic = getIntent().getStringExtra("topic");
         uid = getIntent().getStringExtra("uid");
 
+        androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(topic);
+        setSupportActionBar(myToolbar);
+
         MutableLiveData<Response> userData = firestoreRepository.getUser(uid);
 
         userData.observe(this, new Observer<Response>() {

@@ -7,6 +7,15 @@
     android:layout_gravity="center"
     tools:context=".TopicSelection">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#00ffffff"
+        android:elevation="4dp"
+        app:logo="@drawable/icon48"
+        />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/l_autocomplete"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
