@@ -14,10 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import kotlin.jvm.JvmStatic;
 import ro.htv.model.Post;
+import ro.htv.utils.Utils;
 
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Post> listaelem;
@@ -37,8 +41,10 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         public ImageView Im2;
         public TextView Nume;
         public TextView Desc;
+        public TextView dataa;
         public RelativeLayout up;
         public RelativeLayout down;
+        public RelativeLayout Tot;
 
         public Viewholder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -47,8 +53,10 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             Im2 = itemView.findViewById(R.id.imagineExercitiu);
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
-            up = itemView.findViewById(R.id.up);
+            up = itemView.findViewById(R.id.SUUS);
             down = itemView.findViewById(R.id.down);
+            Tot = itemView.findViewById(R.id.Cardpost);
+            dataa = itemView.findViewById(R.id.data);
             Desc.setMovementMethod(new ScrollingMovementMethod());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,11 +87,19 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         Post PostareActuala = listaelem.get(position);
 
         if (PostareActuala.getPost() == false) {
-            holder.up.setBackgroundColor(Color.parseColor("#dedd8c"));
-            holder.down.setBackgroundColor(Color.parseColor("#8cdec7"));
+            holder.Tot.setBackgroundColor(Color.parseColor("#8cdec7"));
+            if (!PostareActuala.getLinkToImage().equals(""))  {
+                Glide.with(localcontext)
+                        .load(PostareActuala.getLinkToImage())
+                        .apply(new RequestOptions().override(540, 960))
+                        .into(holder.Im2);
+            }
         }
         holder.Nume.setText(PostareActuala.getOwner_name());
         holder.Desc.setText(PostareActuala.getText());
+        Date time = new Date((long)Integer.parseInt(PostareActuala.getTimestamp())*1000);
+        holder.dataa.setText(time.toString());
+        if (PostareActuala.getPost() == true)
         if (!PostareActuala.getLinkToImage().equals(""))  {
             Glide.with(localcontext)
                     .load(PostareActuala.getLinkToImage())
