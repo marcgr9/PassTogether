@@ -52,6 +52,7 @@ class Login : AppCompatActivity() {
             if (it.ok()) {
                 Log.d(TAG, "user logat cu uid ${it.value}")
                 startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", it.value.toString()))
+                finish()
             } else {
                 errField.text = it.value.toString()
             }

@@ -3,7 +3,10 @@ package ro.htv;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
@@ -22,10 +25,6 @@ import ro.htv.utils.FirestoreRepository;
 import ro.htv.utils.Utils;
 
 public class Settings extends AppCompatActivity {
-
-    private Button logout_btn;
-    private Button profile_btn;
-
     private RecyclerView recyclerView ;
     private AdapterList adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -44,8 +43,9 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        logout_btn = findViewById(R.id.LogOutButton);
-        profile_btn = findViewById(R.id.ProfileButton);
+        androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(getString(R.string.settings));
+        setSupportActionBar(myToolbar);
 
         uid = getIntent().getStringExtra("uid");
         firestoreRepository = new FirestoreRepository();
@@ -66,21 +66,31 @@ public class Settings extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
 
-        logout_btn.setOnClickListener(new View.OnClickListener() {
+        final TextView logoutBtn = findViewById(R.id.logoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AuthRepository as = new AuthRepository();
-                as.logout();
-
+                new AuthRepository().logout();
                 startActivity(new Intent(Settings.this, Login.class));
             }
         });
 
-        profile_btn.setOnClickListener(new View.OnClickListener() {
+        final TextView profileBtn = findViewById(R.id.profileBtn);
+        profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), UserProfile.class)
                         .putExtra("uid", uid));
+            }
+        });
+
+        final TextView myPosts = findViewById(R.id.showPosts);
+        myPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myPosts.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setAdapter(adapter);
             }
         });
     }
@@ -93,6 +103,9 @@ public class Settings extends AppCompatActivity {
                 public void onChanged(PostsResponse postsResponse) {
                     if (postsResponse.getStatus() == Utils.Responses.OK) {
                         posts = postsResponse.getPosts();
+                        for (Post post: posts) {
+                            post.setLinkToImage("");
+                        }
 
                         adapter = new AdapterList(posts);
                         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
@@ -102,8 +115,11 @@ public class Settings extends AppCompatActivity {
                             }
                         });
 
+                        int resId = R.anim.layout_animation;
+                        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getBaseContext(), resId);
+                        recyclerView.setLayoutAnimation(animation);
+
                         recyclerView.setLayoutManager(layoutManager);
-                        recyclerView.setAdapter(adapter);
                     } else {
                         // nu sunt postari
                     }
