@@ -22,13 +22,12 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher_background"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_conversion_absoluteHeight="63dp"
-            tools:layout_conversion_absoluteWidth="72dp"
-            android:scaleType="fitXY"/>
+            tools:layout_conversion_absoluteWidth="72dp" />
 
         <TextView
             android:id="@+id/titlu"

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -39,6 +40,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         public TextView Desc;
         public RelativeLayout up;
         public RelativeLayout down;
+        public RelativeLayout Tot;
 
         public Viewholder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
@@ -47,8 +49,9 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             Im2 = itemView.findViewById(R.id.imagineExercitiu);
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
-            up = itemView.findViewById(R.id.up);
+            up = itemView.findViewById(R.id.SUUS);
             down = itemView.findViewById(R.id.down);
+            Tot = itemView.findViewById(R.id.Cardpost);
             Desc.setMovementMethod(new ScrollingMovementMethod());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,11 +82,17 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         Post PostareActuala = listaelem.get(position);
 
         if (PostareActuala.getPost() == false) {
-            holder.up.setBackgroundColor(Color.parseColor("#dedd8c"));
-            holder.down.setBackgroundColor(Color.parseColor("#8cdec7"));
+            holder.Tot.setBackgroundColor(Color.parseColor("#8cdec7"));
+            if (!PostareActuala.getLinkToImage().equals(""))  {
+                Glide.with(localcontext)
+                        .load(PostareActuala.getLinkToImage())
+                        .apply(new RequestOptions().override(540, 960))
+                        .into(holder.Im2);
+            }
         }
         holder.Nume.setText(PostareActuala.getOwner_name());
         holder.Desc.setText(PostareActuala.getText());
+        if (PostareActuala.getPost() == true)
         if (!PostareActuala.getLinkToImage().equals(""))  {
             Glide.with(localcontext)
                     .load(PostareActuala.getLinkToImage())
