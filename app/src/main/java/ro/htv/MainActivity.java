@@ -1,12 +1,15 @@
 package ro.htv;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import ro.htv.utils.AuthRepository;
 import ro.htv.utils.FirestoreRepository;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "main");
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         // sa ma pis pe el java
 
@@ -73,5 +78,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uid));
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settingsBtn) {
+            startActivity(new Intent(getBaseContext(), UserProfile.class).putExtra("uid", uid));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

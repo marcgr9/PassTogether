@@ -19,7 +19,6 @@ import ro.htv.model.Response;
 import ro.htv.model.User;
 import ro.htv.utils.AuthRepository;
 import ro.htv.utils.FirestoreRepository;
-import ro.htv.utils.StorageRepository;
 import ro.htv.utils.Utils;
 
 public class Settings extends AppCompatActivity {
@@ -32,10 +31,10 @@ public class Settings extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
 
     private String uid = "";
-    private String topic = "";
 
     private FirestoreRepository firestoreRepository;
-    private StorageRepository storageRepository;
+
+    private User user;
 
     private ArrayList<Post> posts = new ArrayList<>();
 
@@ -47,24 +46,32 @@ public class Settings extends AppCompatActivity {
 
         logout_btn = findViewById(R.id.LogOutButton);
         profile_btn = findViewById(R.id.ProfileButton);
+
         uid = getIntent().getStringExtra("uid");
         firestoreRepository = new FirestoreRepository();
-        storageRepository = new StorageRepository();
 
         MutableLiveData<Response> userData = firestoreRepository.getUser(uid);
+        userData.observe(this, new Observer<Response>() {
+            @Override
+            public void onChanged(Response response) {
+                if (response.ok()) {
+                    user = (User) response.getValue();
+                    loadPosts();
+                }
+            }
+        });
+
 
         recyclerView = findViewById(R.id.review);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        loadPosts();
 
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AuthRepository as = new AuthRepository();
                 as.logout();
-                ///FirebaseAuth.getInstance().signOut();
-                ///finish();
+
                 startActivity(new Intent(Settings.this, Login.class));
             }
         });
@@ -79,27 +86,19 @@ public class Settings extends AppCompatActivity {
     }
 
         private void loadPosts() {
-            FirestoreRepository fs = new FirestoreRepository();
-            MutableLiveData<PostsResponse> postsReq = fs.getPostsByUser(uid);
+            MutableLiveData<PostsResponse> postsReq = firestoreRepository.getPostsByUser(uid);
 
             postsReq.observe(this, new Observer<PostsResponse>() {
                 @Override
                 public void onChanged(PostsResponse postsResponse) {
                     if (postsResponse.getStatus() == Utils.Responses.OK) {
-                        ArrayList<Postare> lista = new ArrayList<>();
-
                         posts = postsResponse.getPosts();
-                        for(Post X: posts)
-                        {
-                            lista.add(new Postare(X.getLinkToImage(),X.getLinkToImage(),
-                                    X.getOwner_name(), X.getText(), 1));
-                        }
 
-                        adapter = new AdapterList(lista);
+                        adapter = new AdapterList(posts);
                         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                             @Override
                             public void OnItemClick(int poz) {
-                                startActivity(new Intent(getBaseContext(), CometariiPostare.class));
+                                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserProfileImage", user.getProfileImage()).putExtra("currentUserName", user.getName()));
                             }
                         });
 
