@@ -7,5 +7,6 @@ data class User (
     var email: String = "",
     var name: String = "",
     var birthday: String = "",
-    var profileImage: String = Utils.defaultProfilePicture
+    var profileImage: String = Utils.defaultProfilePicture,
+    var karma: Int = 0
 )
