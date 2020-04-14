@@ -215,10 +215,9 @@ public class PostariTopic extends AppCompatActivity {
 
         addPost.hide();
         initPopup();
-
-        post = new Post();
-        post.setOwnwer_uid(uid);
-        post.setTopic(topic);
+        
+        post.setText("");
+        post.setLinkToImage("");
     }
     private void selectPicture() {
         startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), Utils.PICK_IMAGE_RC);
