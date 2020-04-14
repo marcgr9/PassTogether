@@ -14,7 +14,6 @@
         <activity android:name=".TopicSelection" />
         <activity android:name=".UserProfile" />
         <activity android:name=".Login" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".Register" />
         <activity android:name=".Settings" />
         <activity android:name=".ResetPassword"/>
