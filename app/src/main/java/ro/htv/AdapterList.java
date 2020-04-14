@@ -46,6 +46,8 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         public RelativeLayout down;
         public RelativeLayout Tot;
 
+        TextView karma;
+
         public Viewholder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             Im1 = itemView.findViewById(R.id.imagineUser);
@@ -57,6 +59,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             down = itemView.findViewById(R.id.down);
             Tot = itemView.findViewById(R.id.Cardpost);
             dataa = itemView.findViewById(R.id.data);
+            karma = itemView.findViewById(R.id.karma);
             Desc.setMovementMethod(new ScrollingMovementMethod());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,6 +98,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
                         .into(holder.Im2);
             }
         }
+        holder.karma.setText(String.valueOf(PostareActuala.getOwner_karma()));
         holder.Nume.setText(PostareActuala.getOwner_name());
         holder.Desc.setText(PostareActuala.getText());
         Date time = new Date((long)Integer.parseInt(PostareActuala.getTimestamp())*1000);

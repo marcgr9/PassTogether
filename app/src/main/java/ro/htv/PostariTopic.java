@@ -89,7 +89,8 @@ public class PostariTopic extends AppCompatActivity {
                         post.setOwnwer_uid(uid);
                         post.setOwner_name(((User) response.getValue()).getName());
                         post.setOwner_profilePicture(((User) response.getValue()).getProfileImage());
-                        Log.d(TAG, post.getOwner_profilePicture());
+                        post.setOwner_karma(((User) response.getValue()).getKarma());
+                        //Log.d(TAG, post.getOwner_karma());
                         initPopup();
                         loadPosts();
                     }
@@ -207,7 +208,7 @@ public class PostariTopic extends AppCompatActivity {
         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
             @Override
             public void OnItemClick(int poz) {
-                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()));
+                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()).putExtra("parentKarma", posts.get(poz).getOwner_karma()).putExtra("userKarma", post.getOwner_karma()));
             }
         });
 
@@ -257,7 +258,7 @@ public class PostariTopic extends AppCompatActivity {
                         @Override
                         public void OnItemClick(int poz) {
                             Log.d(TAG, post.getOwner_profilePicture());
-                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()));
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()).putExtra("parentKarma", posts.get(poz).getOwner_karma()).putExtra("userKarma", post.getOwner_karma()));
                         }
                     });
 
@@ -305,7 +306,6 @@ public class PostariTopic extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (adapter != null)
-            adapter.setContext(getBaseContext());
+        loadPosts();
     }
 }
