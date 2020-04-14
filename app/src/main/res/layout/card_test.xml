@@ -16,7 +16,7 @@
         android:background="#6b9fed"
         android:id="@+id/persoana"
 
-        android:layout_margin="4dp">
+        android:layout_margin="0dp">
         <com.google.android.material.circularreveal.CircularRevealRelativeLayout
             android:layout_width="match_parent"
             android:id="@+id/up"
