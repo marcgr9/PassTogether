@@ -63,6 +63,8 @@ public class CometariiPostare extends AppCompatActivity {
     private String userProfileImage;
     private String currentUserName;
     private String currentUserProfileImage;
+    private int userKarma;
+    private int parentKarma;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,9 @@ public class CometariiPostare extends AppCompatActivity {
         currentUserProfileImage = getIntent().getExtras().getString("currentUserProfileImage");
         uidUser = getIntent().getExtras().getString("uid");
         currentUserName = getIntent().getExtras().getString("currentUserName");
+        userKarma = getIntent().getExtras().getInt("userKarma") - 2;
+        parentKarma = getIntent().getExtras().getInt("parentKarma");
+
 
         initEmptyComment();
 
@@ -122,10 +127,12 @@ public class CometariiPostare extends AppCompatActivity {
         ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
         ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
         TextView date = findViewById(R.id.data);
+        TextView karma = findViewById(R.id.karma);
 
         Date time = new Date((long)Integer.parseInt(currentPost.getTimestamp())*1000);
         date.setText(time.toString());
 
+        karma.setText(String.valueOf(currentPost.getOwner_karma()));
         nume.setText(currentPost.getOwner_name());
         Desc.setText(currentPost.getText());
 
@@ -246,6 +253,8 @@ public class CometariiPostare extends AppCompatActivity {
 
         if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
             myComment.setText(post_text.getText().toString());
+            //userKarma += 2;
+            myComment.setOwner_karma(userKarma);
 
             Log.d(TAG, myComment.toString());
             System.out.println(myComment.getLinkToImage());
@@ -305,9 +314,10 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void done() {
-        listOfPosts.add(myComment);
-        adapter = new AdapterList(listOfPosts);
-        recyclerView.setAdapter(adapter);
+//        listOfPosts.add(myComment);
+//        adapter = new AdapterList(listOfPosts);
+//        recyclerView.setAdapter(adapter);
+        getComments(idParent);
 
         addComment.hide();
         initFloatingButton();
@@ -325,6 +335,10 @@ public class CometariiPostare extends AppCompatActivity {
         myComment.setOwnwer_uid(uidUser);
         myComment.setOwner_name(currentUserName);
         myComment.setOwner_profilePicture(currentUserProfileImage);
+        userKarma += 2;
+        myComment.setOwner_karma(userKarma);
+
+        Log.d(TAG, "user karma ii " + userKarma);
     }
 
 }

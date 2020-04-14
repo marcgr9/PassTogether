@@ -137,13 +137,31 @@ class FirestoreRepository {
                                 .addOnSuccessListener { parent ->
                                     if (parent.toObject(Post::class.java)!!.ownwer_uid != post.ownwer_uid) {
                                         root.collection("users").document(post.ownwer_uid).update("karma", FieldValue.increment(2));
+                                        root.collection("posts").whereEqualTo("ownwer_uid", post.ownwer_uid).get()
+                                                .addOnSuccessListener {posts ->
+                                                    posts.forEach {
+                                                        root.collection("posts").document(it.id).update("owner_karma", FieldValue.increment(2))
+                                                                .addOnSuccessListener {
+                                                                    response.value = Response(
+                                                                            Utils.Responses.OK,
+                                                                            "karma crescuta"
+                                                                    )
+                                                                }
+                                                    }
+                                                }
+                                    } else {
+                                        response.value = Response(
+                                                Utils.Responses.OK,
+                                                ""
+                                        )
                                     }
                                 }
+                    } else {
+                        response.value = Response(
+                                Utils.Responses.OK,
+                                ""
+                        )
                     }
-                    response.value  = Response(
-                            Utils.Responses.OK,
-                            ""
-                    )
                 }.addOnFailureListener {
                     response.value = Response(
                             Utils.Responses.ERROR,
