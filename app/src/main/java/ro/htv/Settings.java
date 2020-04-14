@@ -2,6 +2,8 @@ package ro.htv;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -88,9 +90,7 @@ public class Settings extends AppCompatActivity {
         myPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myPosts.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                recyclerView.setAdapter(adapter);
+                showPostsIfAny();
             }
         });
     }
@@ -128,5 +128,31 @@ public class Settings extends AppCompatActivity {
 
         }
 
+    private void showPostsIfAny() {
+        findViewById(R.id.showPosts).setVisibility(View.INVISIBLE);
+        if (posts.isEmpty()) {
+            findViewById(R.id.noPosts).setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setAdapter(adapter);
+        }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.topicsBtn) {
+            startActivity(new Intent(getBaseContext(), TopicSelection.class).putExtra("uid", uid));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+}
 

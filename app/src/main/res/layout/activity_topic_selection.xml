@@ -16,6 +16,19 @@
         app:logo="@drawable/icon48"
         />
 
+    <TextView
+        android:id="@+id/hello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toTopOf="@id/l_autocomplete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:padding="18dp"
+        android:textSize="18sp"
+        />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/l_autocomplete"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
