@@ -301,4 +301,11 @@ public class PostariTopic extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter != null)
+            adapter.setContext(getBaseContext());
+    }
 }

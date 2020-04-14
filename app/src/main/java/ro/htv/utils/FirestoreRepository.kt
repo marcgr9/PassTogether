@@ -2,11 +2,14 @@ package ro.htv.utils
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import ro.htv.model.Post
 import ro.htv.model.PostsResponse
 import ro.htv.model.Response
 import ro.htv.model.User
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FirestoreRepository {
 
@@ -121,10 +124,22 @@ class FirestoreRepository {
 
     fun addPost(post: Post): MutableLiveData<Response> {
         val response = MutableLiveData<Response>()
+        var incrementKarma = false
+        if (!post.post) incrementKarma = true
+
+        post.timestamp = (Date().time / 1000).toString()
 
         root.collection("posts").add(post)
                 .addOnSuccessListener {
                     root.collection("posts").document(it.id).update("idpost", it.id)
+                    if (incrementKarma) {
+                        root.collection("posts").document(post.parent).get()
+                                .addOnSuccessListener { parent ->
+                                    if (parent.toObject(Post::class.java)!!.ownwer_uid != post.ownwer_uid) {
+                                        root.collection("users").document(post.ownwer_uid).update("karma", FieldValue.increment(2));
+                                    }
+                                }
+                    }
                     response.value  = Response(
                             Utils.Responses.OK,
                             ""

@@ -111,4 +111,8 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         return listaelem.size();
     }
 
+    public void setContext(Context context) {
+        localcontext = context;
+    }
+
 }
