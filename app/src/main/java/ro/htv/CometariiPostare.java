@@ -31,6 +31,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ro.htv.model.Post;
 import ro.htv.model.PostsResponse;
@@ -120,6 +121,10 @@ public class CometariiPostare extends AppCompatActivity {
         TextView Desc = (TextView) findViewById(R.id.descriere);
         ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
         ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
+        TextView date = findViewById(R.id.data);
+
+        Date time = new Date((long)Integer.parseInt(currentPost.getTimestamp())*1000);
+        date.setText(time.toString());
 
         nume.setText(currentPost.getOwner_name());
         Desc.setText(currentPost.getText());
