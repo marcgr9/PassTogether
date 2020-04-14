@@ -9,14 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppMaterialTheme">
-        <activity android:name=".CometariiPostare"></activity>
+        <activity android:name=".Profile"></activity>
+        <activity android:name=".CometariiPostare" />
         <activity android:name=".PostariTopic" />
         <activity android:name=".TopicSelection" />
         <activity android:name=".UserProfile" />
         <activity android:name=".Login" />
         <activity android:name=".Register" />
         <activity android:name=".Settings" />
-        <activity android:name=".ResetPassword"/>
+        <activity android:name=".ResetPassword" />
         <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
