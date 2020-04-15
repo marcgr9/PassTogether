@@ -211,6 +211,10 @@ public class CometariiPostare extends AppCompatActivity {
                             relativeLayout.setVisibility(View.INVISIBLE);
                             recyclerView.setVisibility(View.INVISIBLE);
                         }
+                        @Override
+                        public void OnSmallPhotoClick(int poz) {
+                            startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", listOfPosts.get(poz).getOwnwer_uid()).putExtra("currentUid", uidUser));
+                        }
                     });
                     recyclerView.setAdapter(adapter);
                 }

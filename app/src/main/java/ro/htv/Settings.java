@@ -117,6 +117,10 @@ public class Settings extends AppCompatActivity {
                             @Override
                             public void OnPhotoClick(int poz) {
                             }
+                            @Override
+                            public void OnSmallPhotoClick(int poz) {
+                                //
+                            }
                         });
 
                         int resId = R.anim.layout_animation;
