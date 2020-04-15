@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
@@ -26,6 +27,9 @@ class TopicSelection : AppCompatActivity() {
         setContentView(R.layout.activity_topic_selection)
 
         setSupportActionBar(my_toolbar)
+        my_toolbar.title = getString(R.string.loading)
+
+        ui(View.INVISIBLE)
 
         uid = intent.getStringExtra("uid")!!
 
@@ -49,6 +53,8 @@ class TopicSelection : AppCompatActivity() {
             val adapter = ArrayAdapter(this,
                     android.R.layout.simple_dropdown_item_1line, it)
             autocomplete.setAdapter(adapter)
+            ui(View.VISIBLE)
+            my_toolbar.title = getString(R.string.app_name)
         })
 
         access.setOnClickListener {
@@ -61,6 +67,14 @@ class TopicSelection : AppCompatActivity() {
                 startActivity(Intent(this, PostariTopic::class.java).putExtra("topic", autocomplete.text.toString()).putExtra("uid", uid))
 
             }
+        }
+    }
+
+    private fun ui(visibility: Int) {
+        visibility.let {
+            l_autocomplete.visibility = it
+            hello.visibility = it
+            access.visibility = it
         }
     }
 
