@@ -50,6 +50,9 @@ class Profile : AppCompatActivity() {
                     firestoreRepository.getPostsByUser(targetUid).observe(this, Observer {posts ->
                         if (posts.status == Utils.Responses.OK) {
                             if (posts.posts!!.size > 0) {
+                                posts.posts!!.map { postList ->
+                                    postList.linkToImage = ""
+                                }
                                 recyclerView.adapter = AdapterList(posts.posts as ArrayList<Post>)
 
                                 // TODO() in getPostsByUser nu se iau si comentariile, deci e nul calculul de cate comentarii is

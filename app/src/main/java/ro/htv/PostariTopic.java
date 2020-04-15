@@ -223,6 +223,11 @@ public class PostariTopic extends AppCompatActivity {
                 recyclerView.setVisibility(View.INVISIBLE);
                 imgzoom.setVisibility(View.VISIBLE);
             }
+
+            @Override
+            public void OnSmallPhotoClick(int poz) {
+                startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", posts.get(poz).getOwnwer_uid()).putExtra("currentUid", uid));
+            }
         });
 
         recyclerView.setAdapter(adapter);
@@ -287,6 +292,11 @@ public class PostariTopic extends AppCompatActivity {
                             imgzoom.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.INVISIBLE);
                             System.out.println("AMINCARCAT");
+                        }
+
+                        @Override
+                        public void OnSmallPhotoClick(int poz) {
+                                startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", posts.get(poz).getOwnwer_uid()).putExtra("currentUid", uid));
                         }
                     });
 
