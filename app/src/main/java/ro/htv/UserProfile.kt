@@ -1,5 +1,6 @@
 package ro.htv
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -237,7 +238,7 @@ class UserProfile : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Utils.PICK_IMAGE_RC) {
+        if (requestCode == Utils.PICK_IMAGE_RC && resultCode == Activity.RESULT_OK) {
             profileImg = data!!.data!!.toString()
 
             //Log.d(TAG, pictureUri.toString())
