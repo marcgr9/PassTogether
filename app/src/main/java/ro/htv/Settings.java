@@ -2,6 +2,7 @@ package ro.htv;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,7 +115,8 @@ public class Settings extends AppCompatActivity {
                         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                             @Override
                             public void OnItemClick(int poz) {
-                                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserProfileImage", user.getProfileImage()).putExtra("currentUserName", user.getName()));
+                                Log.d("marc", String.valueOf(user.getKarma()));
+                                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserProfileImage", user.getProfileImage()).putExtra("currentUserName", user.getName()).putExtra("parentKarma", user.getKarma()).putExtra("userKarma", user.getKarma()));
                             }
 
                             @Override
