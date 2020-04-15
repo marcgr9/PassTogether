@@ -41,6 +41,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class PostariTopic extends AppCompatActivity {
@@ -180,8 +182,8 @@ public class PostariTopic extends AppCompatActivity {
                     @Override
                     public void onChanged(Response response) {
                         if (response.ok()) {
+                            post.setIdpost((String)response.getValue());
                             done();
-                            loadPosts();
                             TextView tvv = (TextView)findViewById(R.id.lipsaPostari);
                             tvv.setVisibility(View.INVISIBLE);
 
@@ -204,34 +206,8 @@ public class PostariTopic extends AppCompatActivity {
     }
 
     private void done() {
-        posts.add(post);
-        adapter = new AdapterList(posts);
-        adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
-            @Override
-            public void OnItemClick(int poz) {
-                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()).putExtra("parentKarma", posts.get(poz).getOwner_karma()).putExtra("userKarma", post.getOwner_karma()));
-            }
-            @Override
-            public void OnPhotoClick(int poz) {
-                Post X = posts.get(poz);
-                String url = X.getLinkToImage();
-                ImageView imgzoom = (ImageView)findViewById(R.id.imgzoom);
-                Glide.with(getBaseContext())
-                        .load(url)
-                        .transition(DrawableTransitionOptions.withCrossFade(1000))
-                        .into(imgzoom);
-                //recyclerView.setVisibility(View.INVISIBLE);
-                imgzoom.setVisibility(View.VISIBLE);
-                findViewById(R.id.blur).setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void OnSmallPhotoClick(int poz) {
-                startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", posts.get(poz).getOwnwer_uid()).putExtra("currentUid", uid));
-            }
-        });
-
-        recyclerView.setAdapter(adapter);
+        posts.add(0, post);
+        loadPosts();
 
         addPost.hide();
         initPopup();
@@ -266,13 +242,21 @@ public class PostariTopic extends AppCompatActivity {
         FirestoreRepository fs = new FirestoreRepository();
         MutableLiveData<PostsResponse> postsReq = fs.getPostsByTopic(topic);
 
+        recyclerView.setVisibility(View.INVISIBLE);
+
         postsReq.observe(this, new Observer<PostsResponse>() {
             @Override
             public void onChanged(PostsResponse postsResponse) {
                 if (postsResponse.getStatus() == Utils.Responses.OK) {
                     posts = postsResponse.getPosts();
 
-                    adapter = new AdapterList(posts);
+                    Collections.sort(posts, new Comparator<Post>() {
+                        public int compare(Post u1, Post u2) {
+                            return u2.getTimestamp().toString().compareTo(u1.getTimestamp().toString());
+                        }
+                    });
+
+                    adapter = new AdapterList(posts, Glide.with(getBaseContext()));
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                         @Override
                         public void OnItemClick(int poz) {
@@ -301,6 +285,8 @@ public class PostariTopic extends AppCompatActivity {
                                 startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", posts.get(poz).getOwnwer_uid()).putExtra("currentUid", uid));
                         }
                     });
+
+                    recyclerView.setVisibility(View.VISIBLE);
 
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
@@ -333,8 +319,8 @@ public class PostariTopic extends AppCompatActivity {
                         @Override
                         public void onChanged(Response response) {
                             if (response.ok()) {
+                                post.setIdpost((String)response.getValue());
                                 done();
-                                loadPosts();
                             }
                         }
                     });
@@ -346,7 +332,6 @@ public class PostariTopic extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadPosts();
     }
     public void comeBack(View view){
         ImageView imgzoomm = (ImageView)findViewById(R.id.imgzoom);

@@ -1,6 +1,7 @@
 package ro.htv;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -35,6 +36,8 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import ro.htv.model.Post;
@@ -85,7 +88,7 @@ public class CometariiPostare extends AppCompatActivity {
         currentUserProfileImage = getIntent().getExtras().getString("currentUserProfileImage");
         uidUser = getIntent().getExtras().getString("uid");
         currentUserName = getIntent().getExtras().getString("currentUserName");
-        userKarma = getIntent().getExtras().getInt("userKarma") - 2;
+        userKarma = getIntent().getExtras().getInt("userKarma");
         parentKarma = getIntent().getExtras().getInt("parentKarma");
 
 
@@ -150,6 +153,14 @@ public class CometariiPostare extends AppCompatActivity {
 
         TextView karma = findViewById(R.id.karma);
 
+        int karmaVal = currentPost.getOwner_karma();
+        int id = R.color.lowKarma;
+        if (karmaVal > 15 && karmaVal <= 30) id = R.color.mediumKarma;
+        if (karmaVal > 30) id = R.color.highKarma;
+
+        int color = ContextCompat.getColor(this, id);
+        karma.setTextColor(color);
+
         Date time = new Date((long)Integer.parseInt(currentPost.getTimestamp())*1000);
         date.setText(time.toString());
 
@@ -193,7 +204,14 @@ public class CometariiPostare extends AppCompatActivity {
                 if (response.getStatus() == Utils.Responses.OK) {
                     System.out.println(response.getPosts().size());
                     listOfPosts = response.getPosts();
-                    adapter = new AdapterList(listOfPosts);
+
+                    Collections.sort(listOfPosts, new Comparator<Post>() {
+                        public int compare(Post u1, Post u2) {
+                            return u2.getTimestamp().toString().compareTo(u1.getTimestamp().toString());
+                        }
+                    });
+
+                    adapter = new AdapterList(listOfPosts, Glide.with(getBaseContext()));
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                         @Override
                         public void OnItemClick(int poz) {
@@ -299,7 +317,8 @@ public class CometariiPostare extends AppCompatActivity {
 
         if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
             myComment.setText(post_text.getText().toString());
-            //userKarma += 2;
+
+            //if (!currentPost.getOwnwer_uid().equals(myComment.getOwnwer_uid())) cresteKarma = true;
             myComment.setOwner_karma(userKarma);
 
             Log.d(TAG, myComment.toString());
@@ -381,7 +400,6 @@ public class CometariiPostare extends AppCompatActivity {
         myComment.setOwnwer_uid(uidUser);
         myComment.setOwner_name(currentUserName);
         myComment.setOwner_profilePicture(currentUserProfileImage);
-        userKarma += 2;
         myComment.setOwner_karma(userKarma);
 
         Log.d(TAG, "user karma ii " + userKarma);

@@ -10,6 +10,8 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -108,7 +110,7 @@ public class Settings extends AppCompatActivity {
                             post.setLinkToImage("");
                         }
 
-                        adapter = new AdapterList(posts);
+                        adapter = new AdapterList(posts, Glide.with(getBaseContext()));
                         adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
                             @Override
                             public void OnItemClick(int poz) {

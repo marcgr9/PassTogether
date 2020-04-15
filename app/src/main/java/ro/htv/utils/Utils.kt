@@ -16,7 +16,8 @@ object Utils {
     }
     const val PICK_IMAGE_RC = 13
 
-    fun convertFromUnix(unix: String): String = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Date(unix.toLong() * 1000))
+    @JvmStatic
+    fun convertFromUnix(unix: String): String = SimpleDateFormat("HH:mm dd/MM/yyyy").format(Date(unix.toLong() * 1000))
 
     fun yearsSince(unix: String): String {
         val date = unix

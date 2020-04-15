@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
     android:background="#F11EA1"
+    android:layout_marginBottom="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     app:cardCornerRadius="25dp">
@@ -24,15 +24,20 @@
                 android:id="@+id/imagineUser"
                 android:layout_alignParentLeft="true"
                 android:layout_height="50dp"/>
+
             <TextView
-                android:layout_width="100dp"
                 android:id="@+id/karma"
-                android:text="karma"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/numePersoana"/>
+                android:layout_marginStart="2dp"
+                android:textSize="12sp"
+                android:layout_toRightOf="@id/numePersoana"
+                android:gravity="top"
+                android:text="34"
+                android:textColor="#ffffff" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:id="@+id/numePersoana"
                 android:layout_toRightOf="@+id/imagineUser"
                 android:layout_marginLeft="25dp"
@@ -72,7 +77,10 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/down"
             android:layout_height="wrap_content"
-            android:id="@+id/imagineExercitiu"/>
+            android:id="@+id/imagineExercitiu"
+            android:paddingBottom="8dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"/>
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
