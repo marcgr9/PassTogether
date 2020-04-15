@@ -16,16 +16,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:logo="@drawable/icon48" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:id="@+id/imagMare"
+        android:visibility="invisible"
+        android:onClick="comeBack"
+        android:layout_height="match_parent"/>
 
-    <include
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:id="@+id/postare"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    <include
         layout="@layout/card_test"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
-
+        android:layout_width="match_parent" />
+    </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/commview"

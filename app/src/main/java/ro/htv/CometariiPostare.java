@@ -28,7 +28,9 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -98,7 +100,7 @@ public class CometariiPostare extends AppCompatActivity {
         getComments(idParent);
 
         //initFloatingButton();
-        relativeLayout = findViewById(R.id.Cardpost);
+        relativeLayout = findViewById(R.id.postare);
         recyclerView = findViewById(R.id.commview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -127,6 +129,20 @@ public class CometariiPostare extends AppCompatActivity {
         TextView nume = (TextView) findViewById(R.id.numePersoana);
         TextView Desc = (TextView) findViewById(R.id.descriere);
         ImageView imv = (ImageView)findViewById(R.id.imagineExercitiu);
+        imv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageView imzoom = (ImageView)findViewById(R.id.imagMare);
+                Glide.with(getBaseContext())
+                        .load(currentPost.getLinkToImage())
+                        .transition(DrawableTransitionOptions.withCrossFade(1000))
+                        .skipMemoryCache(true)
+                        .into(imzoom);
+                imzoom.setVisibility(View.VISIBLE);
+                relativeLayout.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
+            }
+        });
         ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
         TextView date = findViewById(R.id.data);
 
@@ -176,6 +192,26 @@ public class CometariiPostare extends AppCompatActivity {
                     System.out.println(response.getPosts().size());
                     listOfPosts = response.getPosts();
                     adapter = new AdapterList(listOfPosts);
+                    adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
+                        @Override
+                        public void OnItemClick(int poz) {
+
+                        }
+
+                        @Override
+                        public void OnPhotoClick(int poz) {
+                            Post X = listOfPosts.get(poz);
+                            ImageView imzoom = (ImageView)findViewById(R.id.imagMare);
+                            Glide.with(getBaseContext())
+                                    .load(X.getLinkToImage())
+                                    .transition(DrawableTransitionOptions.withCrossFade(1000))
+                                    .skipMemoryCache(true)
+                                    .into(imzoom);
+                            imzoom.setVisibility(View.VISIBLE);
+                            relativeLayout.setVisibility(View.INVISIBLE);
+                            recyclerView.setVisibility(View.INVISIBLE);
+                        }
+                    });
                     recyclerView.setAdapter(adapter);
                 }
             }
@@ -341,6 +377,12 @@ public class CometariiPostare extends AppCompatActivity {
         myComment.setOwner_karma(userKarma);
 
         Log.d(TAG, "user karma ii " + userKarma);
+    }
+    public void comeBack(View view) {
+        ImageView imzoom = (ImageView)findViewById(R.id.imagMare);
+        imzoom.setVisibility(View.INVISIBLE);
+        relativeLayout.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 
