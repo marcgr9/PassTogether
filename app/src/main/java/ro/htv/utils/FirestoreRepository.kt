@@ -133,10 +133,12 @@ class FirestoreRepository {
                 .addOnSuccessListener {
                     root.collection("posts").document(it.id).update("idpost", it.id)
                     if (incrementKarma) {
+                        // incredibil ce metoda de cacat
                         root.collection("posts").document(post.parent).get()
                                 .addOnSuccessListener { parent ->
                                     if (parent.toObject(Post::class.java)!!.ownwer_uid != post.ownwer_uid) {
-                                        root.collection("users").document(post.ownwer_uid).update("karma", FieldValue.increment(2));
+                                        root.collection("users").document(post.ownwer_uid).update("karma", FieldValue.increment(2))
+                                        root.collection("users").document(post.ownwer_uid).update("commentsCount", FieldValue.increment(1))
                                         root.collection("posts").whereEqualTo("ownwer_uid", post.ownwer_uid).get()
                                                 .addOnSuccessListener {posts ->
                                                     posts.forEach {

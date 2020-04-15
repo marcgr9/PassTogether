@@ -45,7 +45,7 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
+        final androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(getString(R.string.settings));
         setSupportActionBar(myToolbar);
 
@@ -58,6 +58,7 @@ public class Settings extends AppCompatActivity {
             public void onChanged(Response response) {
                 if (response.ok()) {
                     user = (User) response.getValue();
+                    myToolbar.setTitle(getString(R.string.settingsWithName, user.getName()));
                     loadPosts();
                 }
             }
