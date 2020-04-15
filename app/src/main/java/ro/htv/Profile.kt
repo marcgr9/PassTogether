@@ -55,17 +55,13 @@ class Profile : AppCompatActivity() {
                                 }
                                 recyclerView.adapter = AdapterList(posts.posts as ArrayList<Post>)
 
-                                // TODO() in getPostsByUser nu se iau si comentariile, deci e nul calculul de cate comentarii is
-
                                 val postsSize = posts.posts!!.size
-                                val numberOfComments = posts.posts!!.count { post ->
-                                    !post.post
-                                }
+                                val numberOfComments = target.commentsCount
 
                                 val animation = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation)
                                 recyclerView.layoutAnimation = animation
 
-                                updateUi(postsSize - numberOfComments, numberOfComments)
+                                updateUi(postsSize, numberOfComments)
                             } else {
                                 updateUi(0, 0)
                             }
