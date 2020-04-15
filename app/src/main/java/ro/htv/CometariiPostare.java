@@ -139,8 +139,10 @@ public class CometariiPostare extends AppCompatActivity {
                         .skipMemoryCache(true)
                         .into(imzoom);
                 imzoom.setVisibility(View.VISIBLE);
-                relativeLayout.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.INVISIBLE);
+                //relativeLayout.setVisibility(View.INVISIBLE);
+                //recyclerView.setVisibility(View.INVISIBLE);
+
+                findViewById(R.id.blur).setVisibility(View.VISIBLE);
             }
         });
         ImageView postOwnerProfilePicture = findViewById(R.id.imagineUser);
@@ -208,8 +210,10 @@ public class CometariiPostare extends AppCompatActivity {
                                     .skipMemoryCache(true)
                                     .into(imzoom);
                             imzoom.setVisibility(View.VISIBLE);
-                            relativeLayout.setVisibility(View.INVISIBLE);
-                            recyclerView.setVisibility(View.INVISIBLE);
+                            //relativeLayout.setVisibility(View.INVISIBLE);
+                            //recyclerView.setVisibility(View.INVISIBLE);
+
+                            findViewById(R.id.blur).setVisibility(View.VISIBLE);
                         }
                         @Override
                         public void OnSmallPhotoClick(int poz) {
@@ -385,8 +389,8 @@ public class CometariiPostare extends AppCompatActivity {
     public void comeBack(View view) {
         ImageView imzoom = (ImageView)findViewById(R.id.imagMare);
         imzoom.setVisibility(View.INVISIBLE);
-        relativeLayout.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.VISIBLE);
+
+        findViewById(R.id.blur).setVisibility(View.INVISIBLE);
     }
 
 
