@@ -24,15 +24,20 @@
                 android:id="@+id/imagineUser"
                 android:layout_alignParentLeft="true"
                 android:layout_height="50dp"/>
+
             <TextView
-                android:layout_width="100dp"
                 android:id="@+id/karma"
-                android:text="karma"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/numePersoana"/>
+                android:layout_marginStart="2dp"
+                android:textSize="12sp"
+                android:layout_toRightOf="@id/numePersoana"
+                android:gravity="top"
+                android:text="34"
+                android:textColor="#ffffff" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:id="@+id/numePersoana"
                 android:layout_toRightOf="@+id/imagineUser"
                 android:layout_marginLeft="25dp"

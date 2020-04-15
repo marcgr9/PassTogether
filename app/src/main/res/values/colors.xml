@@ -5,4 +5,8 @@
     <color name="colorAccent">#D81B60</color>
     <color name="red">#FF0000</color>
     <color name="main">#6b9fed</color>
+
+    <color name="lowKarma">#de9312</color>
+    <color name="mediumKarma">#832cd4</color>
+    <color name="highKarma">#c25581</color>
 </resources>

@@ -1,6 +1,7 @@
 package ro.htv;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -151,6 +152,14 @@ public class CometariiPostare extends AppCompatActivity {
         TextView date = findViewById(R.id.data);
 
         TextView karma = findViewById(R.id.karma);
+
+        int karmaVal = currentPost.getOwner_karma();
+        int id = R.color.lowKarma;
+        if (karmaVal > 15 && karmaVal <= 30) id = R.color.mediumKarma;
+        if (karmaVal > 30) id = R.color.highKarma;
+
+        int color = ContextCompat.getColor(this, id);
+        karma.setTextColor(color);
 
         Date time = new Date((long)Integer.parseInt(currentPost.getTimestamp())*1000);
         date.setText(time.toString());

@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -120,11 +122,19 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
                 glide.load("").into(holder.Im2);
             }
         }
-        holder.karma.setText(String.valueOf(PostareActuala.getOwner_karma()));
+
+        int karma = PostareActuala.getOwner_karma();
+        int id = R.color.lowKarma;
+        if (karma > 15 && karma <= 30) id = R.color.mediumKarma;
+        if (karma > 30) id = R.color.highKarma;
+
+        holder.karma.setText(String.valueOf(karma));
+        int color = ContextCompat.getColor(holder.itemView.getContext(), id);
+        holder.karma.setTextColor(color);
         holder.Nume.setText(PostareActuala.getOwner_name());
         holder.Desc.setText(PostareActuala.getText());
-        Date time = new Date((long)Integer.parseInt(PostareActuala.getTimestamp())*1000);
-        holder.dataa.setText(time.toString());
+
+        holder.dataa.setText(Utils.convertFromUnix(String.valueOf(Integer.parseInt(PostareActuala.getTimestamp()))));
         if (PostareActuala.getPost() == true)
         if (!PostareActuala.getLinkToImage().equals(""))  {
             glide
