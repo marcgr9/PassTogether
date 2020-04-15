@@ -32,5 +32,10 @@
     <string name="showMyPosts">Arata postarile mele</string>
     <string name="noPosts">Nu ai nicio postare</string>
     <string name="hello">Salut %1$s,\nLa ce vrei sa te pregatesti?</string>
+    <string name="age">Varsta</string>
+    <string name="karma">Karma</string>
+    <string name="postsAndComments">Postari si comentarii</string>
+    <string name="numberOfPosts">%1$s postari / %2$s comentarii</string>
+    <string name="yearsSince">%1$s ani</string>
 
 </resources>

@@ -17,4 +17,20 @@ object Utils {
     const val PICK_IMAGE_RC = 13
 
     fun convertFromUnix(unix: String): String = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Date(unix.toLong() * 1000))
+
+    fun yearsSince(unix: String): String {
+        val date = unix
+        val now = SimpleDateFormat("dd/MM/yyyy").format(Date().time).toString()
+
+        val dateSplit = date.split("/")
+        val nowSplit = now.split("/")
+
+        var years = nowSplit[2].toInt() - dateSplit[2].toInt()
+        if (nowSplit[1].toInt() < dateSplit[1].toInt()) {
+            years--;
+        } else if (nowSplit[1].toInt() == dateSplit[1].toInt() && nowSplit[0].toInt() > dateSplit[0].toInt()) years--;
+
+
+        return years.toString()
+    }
 }

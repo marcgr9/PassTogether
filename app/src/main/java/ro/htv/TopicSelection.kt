@@ -59,6 +59,7 @@ class TopicSelection : AppCompatActivity() {
                 //Log.d(TAG, autocomplete.text.toString())
 
                 startActivity(Intent(this, PostariTopic::class.java).putExtra("topic", autocomplete.text.toString()).putExtra("uid", uid))
+                //startActivity(Intent(this, Profile::class.java).putExtra("targetUid", uid).putExtra("currentUid", uid))
 
             }
         }
