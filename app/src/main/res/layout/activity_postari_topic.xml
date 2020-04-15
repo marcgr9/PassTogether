@@ -14,7 +14,12 @@
         android:elevation="4dp"
         app:logo="@drawable/icon48"
         />
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:id="@+id/imgzoom"
+        android:visibility="invisible"
+        android:onClick="comeBack"
+        android:layout_height="match_parent"/>
     <TextView
         android:layout_width="350dp"
         android:layout_height="wrap_content"

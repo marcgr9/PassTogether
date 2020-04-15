@@ -114,6 +114,10 @@ public class Settings extends AppCompatActivity {
                             public void OnItemClick(int poz) {
                                 startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserProfileImage", user.getProfileImage()).putExtra("currentUserName", user.getName()));
                             }
+
+                            @Override
+                            public void OnPhotoClick(int poz) {
+                            }
                         });
 
                         int resId = R.anim.layout_animation;

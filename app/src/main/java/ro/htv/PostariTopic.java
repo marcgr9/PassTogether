@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -210,6 +211,18 @@ public class PostariTopic extends AppCompatActivity {
             public void OnItemClick(int poz) {
                 startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()).putExtra("parentKarma", posts.get(poz).getOwner_karma()).putExtra("userKarma", post.getOwner_karma()));
             }
+            @Override
+            public void OnPhotoClick(int poz) {
+                Post X = posts.get(poz);
+                String url = X.getLinkToImage();
+                ImageView imgzoom = (ImageView)findViewById(R.id.imgzoom);
+                Glide.with(getBaseContext())
+                        .load(url)
+                        .transition(DrawableTransitionOptions.withCrossFade(1000))
+                        .into(imgzoom);
+                recyclerView.setVisibility(View.INVISIBLE);
+                imgzoom.setVisibility(View.VISIBLE);
+            }
         });
 
         recyclerView.setAdapter(adapter);
@@ -260,6 +273,21 @@ public class PostariTopic extends AppCompatActivity {
                             Log.d(TAG, post.getOwner_profilePicture());
                             startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()).putExtra("parentKarma", posts.get(poz).getOwner_karma()).putExtra("userKarma", post.getOwner_karma()));
                         }
+                        @Override
+                        public void OnPhotoClick(int poz) {
+                            Post X = posts.get(poz);
+                            System.out.println("AMAJUNS");
+                            String url = X.getLinkToImage();
+                            ImageView imgzoom = (ImageView)findViewById(R.id.imgzoom);
+                            Glide.with(getBaseContext())
+                                    .load(url)
+                                    .transition(DrawableTransitionOptions.withCrossFade())
+                                    .skipMemoryCache(true)
+                                    .into(imgzoom);
+                            imgzoom.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.INVISIBLE);
+                            System.out.println("AMINCARCAT");
+                        }
                     });
 
                     recyclerView.setLayoutManager(layoutManager);
@@ -308,4 +336,10 @@ public class PostariTopic extends AppCompatActivity {
         super.onResume();
         loadPosts();
     }
+    public void comeBack(View view){
+        ImageView imgzoomm = (ImageView)findViewById(R.id.imgzoom);
+        imgzoomm.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
 }

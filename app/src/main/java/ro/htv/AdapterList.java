@@ -30,6 +30,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private static Context localcontext;
     public interface OnItemClickListener{
         void OnItemClick(int poz);
+        void OnPhotoClick(int poz);
     }
     void setOnItemClick(OnItemClickListener listener)
     {
@@ -53,6 +54,13 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             Im1 = itemView.findViewById(R.id.imagineUser);
             localcontext = itemView.getContext();
             Im2 = itemView.findViewById(R.id.imagineExercitiu);
+            Im2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null)
+                    listener.OnPhotoClick(getAdapterPosition());
+                }
+            });
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
             up = itemView.findViewById(R.id.SUUS);
@@ -125,5 +133,6 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     public void setContext(Context context) {
         localcontext = context;
     }
+
 
 }
