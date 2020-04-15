@@ -249,4 +249,21 @@ class FirestoreRepository {
 
         return response
     }
+
+    fun updatePostsWithNewProfileImage(uid: String, uri: String): MutableLiveData<Boolean> {
+        val response = MutableLiveData<Boolean>()
+
+        root.collection("posts").whereEqualTo("ownwer_uid", uid).get()
+                .addOnSuccessListener {
+                    it.forEach { doc ->
+                        root.collection("posts").document(doc.id).update("owner_profilePicture", uri)
+                    }
+                    response.value = true
+                }
+
+        return response
+    }
+
+    // TODO() cand si daca te uiti peste cod si vrei sa il refaci regandeste unele chestii de la fb
+    // TODO() ca codu actual o sa ti bage niste costuri
 }

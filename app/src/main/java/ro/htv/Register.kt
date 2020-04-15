@@ -1,5 +1,6 @@
 package ro.htv
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -124,7 +125,7 @@ class Register : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
             pictureUri = data!!.data!!
 
             Log.d(TAG, pictureUri.toString())

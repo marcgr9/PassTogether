@@ -222,7 +222,7 @@ public class PostariTopic extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Utils.PICK_IMAGE_RC) {
+        if (requestCode == Utils.PICK_IMAGE_RC && resultCode == RESULT_OK) {
             String postImage = data.getData().toString();
             //System.out.println(postImage);
             post.setLinkToImage(postImage);
