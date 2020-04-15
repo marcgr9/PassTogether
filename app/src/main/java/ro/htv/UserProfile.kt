@@ -280,7 +280,11 @@ class UserProfile : AppCompatActivity() {
 
                 val imgUpdated = firestoreRepository.setImage(uid, it.value.toString())
                 imgUpdated.observe(this, Observer {img ->
-                    if (img) done()
+                    if (img) {
+                        firestoreRepository.updatePostsWithNewProfileImage(uid, it.value.toString()).observe(this, Observer {done ->
+                            if (done) done()
+                        })
+                    }
                 })
 
             } else {
