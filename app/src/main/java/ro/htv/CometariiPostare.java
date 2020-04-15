@@ -161,8 +161,7 @@ public class CometariiPostare extends AppCompatActivity {
         int color = ContextCompat.getColor(this, id);
         karma.setTextColor(color);
 
-        Date time = new Date((long)Integer.parseInt(currentPost.getTimestamp())*1000);
-        date.setText(time.toString());
+        date.setText(Utils.convertFromUnix(String.valueOf(Integer.parseInt(currentPost.getTimestamp()))));
 
         karma.setText(String.valueOf(currentPost.getOwner_karma()));
         nume.setText(currentPost.getOwner_name());
