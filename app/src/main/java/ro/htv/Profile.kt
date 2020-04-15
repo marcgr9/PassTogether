@@ -53,7 +53,7 @@ class Profile : AppCompatActivity() {
                                 posts.posts!!.map { postList ->
                                     postList.linkToImage = ""
                                 }
-                                recyclerView.adapter = AdapterList(posts.posts as ArrayList<Post>)
+                                recyclerView.adapter = AdapterList(posts.posts as ArrayList<Post>, Glide.with(baseContext))
 
                                 val postsSize = posts.posts!!.size
                                 val numberOfComments = target.commentsCount

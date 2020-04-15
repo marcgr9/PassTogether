@@ -27,7 +27,7 @@ class TopicSelection : AppCompatActivity() {
         setContentView(R.layout.activity_topic_selection)
 
         setSupportActionBar(my_toolbar)
-        my_toolbar.title = getString(R.string.loading)
+        supportActionBar!!.title = getString(R.string.loading)
 
         ui(View.INVISIBLE)
 
@@ -54,7 +54,7 @@ class TopicSelection : AppCompatActivity() {
                     android.R.layout.simple_dropdown_item_1line, it)
             autocomplete.setAdapter(adapter)
             ui(View.VISIBLE)
-            my_toolbar.title = getString(R.string.app_name)
+            supportActionBar!!.title = getString(R.string.app_name)
         })
 
         access.setOnClickListener {

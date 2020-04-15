@@ -3,6 +3,7 @@ package ro.htv;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import ro.htv.utils.Utils;
 
 public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
     private ArrayList<Post> listaelem;
+    private final RequestManager glide;
 
     private OnItemClickListener mListener;
     private static Context localcontext;
@@ -89,9 +92,10 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         }
 
     }
-    public AdapterList (ArrayList<Post>lista)
+    public AdapterList (ArrayList<Post>lista, RequestManager glide)
     {
         listaelem = lista;
+        this.glide = glide;
     }
     @NonNull
     @Override
@@ -108,10 +112,12 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         if (PostareActuala.getPost() == false) {
             holder.Tot.setBackgroundColor(Color.parseColor("#8cdec7"));
             if (!PostareActuala.getLinkToImage().equals(""))  {
-                Glide.with(localcontext)
+                glide
                         .load(PostareActuala.getLinkToImage())
                         .apply(new RequestOptions().override(540, 960))
                         .into(holder.Im2);
+            } else {
+                glide.load("").into(holder.Im2);
             }
         }
         holder.karma.setText(String.valueOf(PostareActuala.getOwner_karma()));
@@ -121,12 +127,15 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         holder.dataa.setText(time.toString());
         if (PostareActuala.getPost() == true)
         if (!PostareActuala.getLinkToImage().equals(""))  {
-            Glide.with(localcontext)
+            glide
                     .load(PostareActuala.getLinkToImage())
                     .into(holder.Im2);
+        } else {
+            // nu avem timp sa facem un fix mai elegant
+            glide.load("").into(holder.Im2);
         }
 
-        Glide.with(localcontext)
+        glide
                 .load(PostareActuala.getOwner_profilePicture())
                 .circleCrop()
                 .into(holder.Im1);
