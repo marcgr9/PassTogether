@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#00ffffff"
         android:elevation="4dp"
-        app:logo="@drawable/icon48"
+        app:logo="@drawable/logo48"
         />
 
     <ImageView
@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/my_toolbar"
         android:layout_margin="18dp"
-        android:src="@drawable/icon192"/>
+        android:src="@drawable/logo192"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/l_age"

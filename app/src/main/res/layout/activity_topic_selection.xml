@@ -13,7 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#00ffffff"
         android:elevation="4dp"
-        app:logo="@drawable/icon48"
+        app:logo="@drawable/logo48"
         />
 
     <TextView

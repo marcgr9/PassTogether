@@ -220,8 +220,9 @@ public class PostariTopic extends AppCompatActivity {
                         .load(url)
                         .transition(DrawableTransitionOptions.withCrossFade(1000))
                         .into(imgzoom);
-                recyclerView.setVisibility(View.INVISIBLE);
+                //recyclerView.setVisibility(View.INVISIBLE);
                 imgzoom.setVisibility(View.VISIBLE);
+                findViewById(R.id.blur).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -289,8 +290,9 @@ public class PostariTopic extends AppCompatActivity {
                                     .transition(DrawableTransitionOptions.withCrossFade())
                                     .skipMemoryCache(true)
                                     .into(imgzoom);
+                            //recyclerView.setVisibility(View.INVISIBLE);
                             imgzoom.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.INVISIBLE);
+                            findViewById(R.id.blur).setVisibility(View.VISIBLE);
                             System.out.println("AMINCARCAT");
                         }
 
@@ -349,7 +351,8 @@ public class PostariTopic extends AppCompatActivity {
     public void comeBack(View view){
         ImageView imgzoomm = (ImageView)findViewById(R.id.imgzoom);
         imgzoomm.setVisibility(View.INVISIBLE);
-        recyclerView.setVisibility(View.VISIBLE);
+
+        findViewById(R.id.blur).setVisibility(View.INVISIBLE);
     }
 
 }
