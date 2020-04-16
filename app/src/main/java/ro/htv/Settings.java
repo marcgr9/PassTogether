@@ -1,6 +1,7 @@
 package ro.htv;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
@@ -25,6 +30,7 @@ import ro.htv.model.Post;
 import ro.htv.model.PostsResponse;
 import ro.htv.model.Response;
 import ro.htv.model.User;
+import ro.htv.notifications.Token;
 import ro.htv.utils.AuthRepository;
 import ro.htv.utils.FirestoreRepository;
 import ro.htv.utils.Utils;
@@ -97,7 +103,25 @@ public class Settings extends AppCompatActivity {
                 showPostsIfAny();
             }
         });
+
+        SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("Current_USERID", uid);
+        editor.apply();
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
     }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+        }
+
+        public void updateToken(String token) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
+            Token mToken = new Token(token);
+            ref.child(uid).setValue(mToken);
+        }
 
         private void loadPosts() {
             MutableLiveData<PostsResponse> postsReq = firestoreRepository.getPostsByUser(uid);

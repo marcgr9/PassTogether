@@ -1,5 +1,6 @@
 package ro.htv;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageDecoder;
@@ -27,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
@@ -35,15 +38,31 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Queue;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import ro.htv.model.Post;
 import ro.htv.model.PostsResponse;
 import ro.htv.model.Response;
+import ro.htv.model.User;
+import ro.htv.notifications.APIService;
+import ro.htv.notifications.Client;
+import ro.htv.notifications.Data;
+import ro.htv.notifications.Sender;
+import ro.htv.notifications.Token;
 import ro.htv.utils.FirestoreRepository;
 import ro.htv.utils.StorageRepository;
 import ro.htv.utils.Utils;
@@ -75,12 +94,17 @@ public class CometariiPostare extends AppCompatActivity {
     private int userKarma;
     private int parentKarma;
 
+    APIService apiService;
+    boolean notify = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cometarii_postare);
 
         Log.d(TAG, "onCreate");
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
         androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(getString(R.string.comments));
@@ -94,6 +118,7 @@ public class CometariiPostare extends AppCompatActivity {
         userKarma = getIntent().getExtras().getInt("userKarma");
         parentKarma = getIntent().getExtras().getInt("parentKarma");
 
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         initEmptyComment();
 
@@ -114,6 +139,22 @@ public class CometariiPostare extends AppCompatActivity {
 
         //initFloatingButton();
     }
+
+    @Override
+    protected void onResume() {
+        SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("Current_USERID", uidUser);
+        editor.apply();
+        super.onResume();
+    }
+
+    public void updateToken(String token) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token mToken = new Token(token);
+        ref.child(uidUser).setValue(mToken);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -344,6 +385,27 @@ public class CometariiPostare extends AppCompatActivity {
         EditText post_text = addComment.findViewById(R.id.popup_description);
 
         if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
+            notify = true;
+            String msg = " " + post_text.getText().toString();
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users")
+                    .child(uidUser);
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);Log.d("ofofofof", "abcdefghijklmn");
+                    if(notify) {
+                        senNotification(idParent, user.getName(), "esti prost?");
+
+                        notify = false;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d("ofofofof", "abcde");
+                }
+            });
+
             Log.d(TAG, "validateCommentBun");
             myComment.setText(post_text.getText().toString());
             addComment.findViewById(R.id.popup_add).setClickable(false);
@@ -380,6 +442,39 @@ public class CometariiPostare extends AppCompatActivity {
             TextView err = addComment.findViewById(R.id.errField);
             err.setText(getString(R.string.postError));
         }
+    }
+
+    private void senNotification(final String idParent, String nameee, String s) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(idParent);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(uidUser, ":", "New Message", idParent,
+                            R.drawable.logo192);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<ro.htv.notifications.Response>() {
+                                @Override
+                                public void onResponse(Call<ro.htv.notifications.Response> call, retrofit2.Response<ro.htv.notifications.Response> response) {
+                                    Toast.makeText(CometariiPostare.this, "" + response.message(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ro.htv.notifications.Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void uploadImage(Bitmap bitmap) {
