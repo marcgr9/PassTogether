@@ -57,7 +57,7 @@ public class ResetPassword extends AppCompatActivity {
                             else
                             {
                                 String error = task.getException().getMessage();
-                                Toast.makeText(ResetPassword.this, "Nu-i ok ba: " + error,
+                                Toast.makeText(ResetPassword.this, error,
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
