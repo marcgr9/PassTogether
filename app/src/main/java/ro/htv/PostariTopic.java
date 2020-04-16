@@ -301,6 +301,11 @@ public class PostariTopic extends AppCompatActivity {
                         public void OnSmallPhotoClick(int poz) {
                                 startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", posts.get(poz).getOwnwer_uid()).putExtra("currentUid", uid));
                         }
+
+                        @Override
+                        public void OnTextClick(int poz) {
+                            startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", posts.get(poz).getOwner_profilePicture()).putExtra("uid", uid).putExtra("currentUserName", post.getOwner_name()).putExtra("currentUserProfileImage", post.getOwner_profilePicture()).putExtra("parentKarma", posts.get(poz).getOwner_karma()).putExtra("userKarma", post.getOwner_karma()));
+                        }
                     });
 
                     recyclerView.setVisibility(View.VISIBLE);

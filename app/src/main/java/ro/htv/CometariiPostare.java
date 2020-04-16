@@ -261,6 +261,11 @@ public class CometariiPostare extends AppCompatActivity {
                             Log.d(TAG, "sfndj");
                             startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", listOfPosts.get(poz).getOwnwer_uid()).putExtra("currentUid", uidUser));
                         }
+
+                        @Override
+                        public void OnTextClick(int poz) {
+
+                        }
                     });
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getBaseContext(), R.anim.layout_animation));
