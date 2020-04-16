@@ -78,6 +78,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 new AuthRepository().logout();
                 startActivity(new Intent(Settings.this, Login.class));
+                finish();
             }
         });
 
