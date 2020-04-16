@@ -24,6 +24,7 @@ import android.graphics.ImageDecoder;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -173,6 +174,10 @@ public class PostariTopic extends AppCompatActivity {
             post.setText(post_text.getText().toString());
             post.setTimestamp("0000");
 
+            addPost.findViewById(R.id.popup_add).setClickable(false);
+            addPost.findViewById(R.id.popup_addImage).setClickable(false);
+            addPost.findViewById(R.id.popup_progressBar).setVisibility(View.VISIBLE);
+
             Log.d(TAG, post.toString());
             System.out.println(post.getLinkToImage());
             if (post.getLinkToImage().equals("")) {
@@ -182,7 +187,9 @@ public class PostariTopic extends AppCompatActivity {
                     @Override
                     public void onChanged(Response response) {
                         if (response.ok()) {
+                            Log.d(TAG, response.getValue().toString());
                             post.setIdpost((String)response.getValue());
+                            Log.d(TAG, post.toString());
                             done();
                             TextView tvv = (TextView)findViewById(R.id.lipsaPostari);
                             tvv.setVisibility(View.INVISIBLE);
@@ -207,13 +214,26 @@ public class PostariTopic extends AppCompatActivity {
 
     private void done() {
         posts.add(0, post);
-        loadPosts();
+        Log.d(TAG, post.toString());
+        adapter.notifyDataSetChanged();
+        layoutManager.scrollToPosition(0);
+
+        addPost.findViewById(R.id.popup_add).setClickable(true);
+        addPost.findViewById(R.id.popup_addImage).setClickable(true);
+        addPost.findViewById(R.id.popup_progressBar).setVisibility(View.INVISIBLE);
+
+        //loadPosts();
 
         addPost.hide();
         initPopup();
         
-        post.setText("");
-        post.setLinkToImage("");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                post.setText("");
+                post.setLinkToImage("");
+            }
+        }, 500);
     }
     private void selectPicture() {
         startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), Utils.PICK_IMAGE_RC);

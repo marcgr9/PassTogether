@@ -79,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@+id/popup_description"
         />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/popup_addImage"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -99,7 +99,7 @@
 
         app:srcCompat="@drawable/insert_photo"/>
 
-    <ImageView
+    <ImageButton
         android:id="@+id/popup_add"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -130,7 +130,7 @@
         android:background="@drawable/circle_bg"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/popup_add"
-        app:layout_constraintStart_toStartOf="@+id/popup_add"
-        app:layout_constraintTop_toTopOf="@+id/popup_add" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/popup_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>
