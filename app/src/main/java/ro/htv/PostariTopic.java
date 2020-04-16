@@ -354,12 +354,40 @@ public class PostariTopic extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateKarma();
     }
     public void comeBack(View view){
         ImageView imgzoomm = (ImageView)findViewById(R.id.imgzoom);
         imgzoomm.setVisibility(View.INVISIBLE);
 
         findViewById(R.id.blur).setVisibility(View.INVISIBLE);
+    }
+
+    private void updateKarma() {
+        if (!posts.isEmpty()) {
+            MutableLiveData<Response> userData = firestoreRepository.getUser(uid);
+
+            userData.observe(this, new Observer<Response>() {
+                @Override
+                public void onChanged(Response response) {
+                    if (response.ok()) {
+                        if (response.getValue() instanceof User) {
+                            post.setOwner_karma(((User) response.getValue()).getKarma());
+
+                            for (Post p: posts) {
+                                if (p.getOwnwer_uid().equals(post.getOwnwer_uid())) {
+                                    p.setOwner_karma(post.getOwner_karma());
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    }
+                }
+            });
+
+
+        }
     }
 
 }
