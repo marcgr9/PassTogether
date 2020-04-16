@@ -42,6 +42,9 @@ class UserProfile : AppCompatActivity() {
     private lateinit var storageRepository: StorageRepository
     private lateinit var authRepository: AuthRepository
 
+    var comms: Int = 0
+    var karma: Int = 0
+
     private var uid: String? = ""
     private var firstProfileImg = Utils.defaultProfilePicture
     private var profileImg = Utils.defaultProfilePicture
@@ -81,6 +84,8 @@ class UserProfile : AppCompatActivity() {
         pass.setText("")
         nume.setText(user.name)
         birthday.setText(user.birthday)
+        karma = user.karma
+        comms = user.commentsCount
         firstProfileImg = user.profileImage
         profileImg = firstProfileImg
 
@@ -160,6 +165,7 @@ class UserProfile : AppCompatActivity() {
         if (errors.isEmpty()) {
             Log.d(TAG, "firebase")
 
+            updateBtn.text = "..."
             updateBtn.isClickable = false
 
             if (!pass.isNullOrEmpty()) {
@@ -173,7 +179,9 @@ class UserProfile : AppCompatActivity() {
                                 email,
                                 name,
                                 birthday,
-                                profileImg
+                                profileImg,
+                                karma,
+                                comms
                         ))
 
                         user.observe(this, Observer {userIt ->
@@ -188,11 +196,13 @@ class UserProfile : AppCompatActivity() {
                                 } else done()
                             } else {
                                 errField.text = it.value.toString()
+                                updateBtn.text = getString(R.string.profile)
                                 updateBtn.isClickable = true
                             }
                         })
                     } else {
                         errField.text = it.value.toString()
+                        updateBtn.text = getString(R.string.profile)
                         updateBtn.isClickable = true
                     }
                 })
@@ -202,7 +212,9 @@ class UserProfile : AppCompatActivity() {
                         email,
                         name,
                         birthday,
-                        profileImg
+                        profileImg,
+                        karma,
+                        comms
                 ))
 
                 user.observe(this, Observer {user ->
@@ -217,6 +229,7 @@ class UserProfile : AppCompatActivity() {
                         } else done()
                     } else {
                         errField.text = user.value.toString()
+                        updateBtn.text = getString(R.string.profile)
                         updateBtn.isClickable = true
                     }
                 })
@@ -290,6 +303,7 @@ class UserProfile : AppCompatActivity() {
 
             } else {
                 errField.text = it.value.toString()
+                updateBtn.text = getString(R.string.profile)
                 updateBtn.isClickable = true
             }
         })
@@ -298,6 +312,7 @@ class UserProfile : AppCompatActivity() {
     private fun done() {
         pass.setText("")
         startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", uid!!))
-        Toast.makeText(this, "profil updatat", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "profil updatat", Toast.LENGTH_SHORT).show()
+        finish()
     }
 }

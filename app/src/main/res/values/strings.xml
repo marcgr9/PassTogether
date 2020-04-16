@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HackTheVirus</string>
+    <string name="app_name">PassTogether</string>
 
     <string name="register">Inregistrare</string>
     <string name="login">Login</string>
@@ -40,5 +40,6 @@
     <string name="settingsWithName">Setari - %1$s</string>
     <string name="commentsLoading">Se incarca comentariile</string>
     <string name="loadingParent">Se incarca postarea mama</string>
+    <string name="noPostsUser">Nu exista nicio postare de afisat</string>
 
 </resources>

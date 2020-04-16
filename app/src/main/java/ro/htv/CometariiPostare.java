@@ -258,6 +258,7 @@ public class CometariiPostare extends AppCompatActivity {
                         }
                         @Override
                         public void OnSmallPhotoClick(int poz) {
+                            Log.d(TAG, "sfndj");
                             startActivity(new Intent(getBaseContext(), Profile.class).putExtra("targetUid", listOfPosts.get(poz).getOwnwer_uid()).putExtra("currentUid", uidUser));
                         }
                     });

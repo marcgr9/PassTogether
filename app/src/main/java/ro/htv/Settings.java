@@ -78,6 +78,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 new AuthRepository().logout();
                 startActivity(new Intent(Settings.this, Login.class));
+                finish();
             }
         });
 
@@ -162,7 +163,7 @@ public class Settings extends AppCompatActivity {
         if (item.getItemId() == R.id.topicsBtn) {
             startActivity(new Intent(getBaseContext(), TopicSelection.class).putExtra("uid", uid));
             finish();
-            return true;
+            return false;
         }
 
         return super.onOptionsItemSelected(item);

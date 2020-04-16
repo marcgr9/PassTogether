@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_profile.*
 import ro.htv.model.Post
@@ -60,11 +61,13 @@ class Profile : AppCompatActivity() {
 
                                 val animation = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation)
                                 recyclerView.layoutAnimation = animation
-
+                                Log.d("TAG", "mhmmm")
                                 updateUi(postsSize, numberOfComments)
                             } else {
-                                updateUi(0, 0)
+                                updateUi(0, target.commentsCount)
                             }
+                        } else {
+                            updateUi(0, target.commentsCount)
                         }
                     })
                 } else print("mhm")
@@ -75,9 +78,9 @@ class Profile : AppCompatActivity() {
     }
 
     private fun updateUi(posts: Int, comments: Int) {
-        val total = posts + comments
         View.VISIBLE.apply {
-            recyclerView.visibility = if (total != 0) View.VISIBLE else View.GONE
+            recyclerView.visibility = if (posts != 0) View.VISIBLE else View.GONE
+            noPosts.visibility = if (posts != 0) View.GONE else View.VISIBLE
             l_age.visibility = this
             l_karma.visibility = this
             l_numberOfPosts.visibility = this

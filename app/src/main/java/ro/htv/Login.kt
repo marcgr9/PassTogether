@@ -47,6 +47,9 @@ class Login : AppCompatActivity() {
             return
         }
 
+        loginBtn.text = "..."
+        loginBtn.isClickable = false
+
         val user: MutableLiveData<Response> = authRepository.login(email, password)
         user.observe(this, Observer {
             if (it.ok()) {
@@ -54,6 +57,8 @@ class Login : AppCompatActivity() {
                 startActivity(Intent(this, TopicSelection::class.java).putExtra("uid", it.value.toString()))
                 finish()
             } else {
+                loginBtn.text = getString(R.string.login)
+                loginBtn.isClickable = true
                 errField.text = it.value.toString()
             }
         })

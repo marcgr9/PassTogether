@@ -107,14 +107,22 @@ class Register : AppCompatActivity() {
                         } else {
                             Log.d(TAG, "eroare la creare doc user ${it.value}")
                             errField.text = it.value.toString()
+                            registerBtn.text = getString(R.string.register)
+                            registerBtn.isClickable = true
                         }
                     })
                 } else {
                     errField.text = it.value.toString()
+                    registerBtn.text = getString(R.string.register)
+                    registerBtn.isClickable = true
                 }
             })
 
-        } else errField.text = errors
+        } else {
+            errField.text = errors
+            registerBtn.text = getString(R.string.register)
+            registerBtn.isClickable = true
+        }
     }
 
     private fun selectPicture() {
@@ -182,6 +190,8 @@ class Register : AppCompatActivity() {
 
             } else {
                 errField.text = it.value.toString()
+                registerBtn.text = getString(R.string.register)
+                registerBtn.isClickable = true
             }
         })
     }
