@@ -9,8 +9,9 @@
     <string name="birthday">Data nasterii</string>
     <string name="noAccount">Nu ai cont? Inregistreaza-te aici</string>
     <string name="logOut">Log Out</string>
-    <string name="resetPassword">Ti-ai uitat parola?</string>
+    <string name="resetPassword">Reseteaza-ti parola</string>
     <string name="setari">Setari</string>
+    <string name="updateProfile">Actualizare informatii</string>
 
     <string name="invalidEmail">Email-ul e invalid</string>
     <string name="invalidPass">Parola e prea simpla!</string>
