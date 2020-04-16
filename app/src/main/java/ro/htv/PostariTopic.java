@@ -213,27 +213,29 @@ public class PostariTopic extends AppCompatActivity {
     }
 
     private void done() {
-        posts.add(0, post);
-        Log.d(TAG, post.toString());
-        adapter.notifyDataSetChanged();
-        layoutManager.scrollToPosition(0);
+        if (!posts.isEmpty()) {
+            posts.add(0, post);
+            Log.d(TAG, post.toString());
 
-        addPost.findViewById(R.id.popup_add).setClickable(true);
-        addPost.findViewById(R.id.popup_addImage).setClickable(true);
-        addPost.findViewById(R.id.popup_progressBar).setVisibility(View.INVISIBLE);
+            adapter.notifyDataSetChanged();
+            layoutManager.scrollToPosition(0);
 
-        //loadPosts();
+            //loadPosts();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    post.setText("");
+                    post.setLinkToImage("");
+                }
+            }, 500);
+        } else loadPosts();
 
         addPost.hide();
         initPopup();
-        
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                post.setText("");
-                post.setLinkToImage("");
-            }
-        }, 500);
+        addPost.findViewById(R.id.popup_add).setClickable(true);
+        addPost.findViewById(R.id.popup_addImage).setClickable(true);
+        addPost.findViewById(R.id.popup_progressBar).setVisibility(View.INVISIBLE);
     }
     private void selectPicture() {
         startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), Utils.PICK_IMAGE_RC);
