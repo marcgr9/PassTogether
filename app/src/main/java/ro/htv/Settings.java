@@ -127,6 +127,12 @@ public class Settings extends AppCompatActivity {
                             public void OnSmallPhotoClick(int poz) {
                                 //
                             }
+
+                            @Override
+                            public void OnTextClick(int poz) {
+                                startActivity(new Intent(getBaseContext(), CometariiPostare.class).putExtra("idPost", posts.get(poz).getIdpost()).putExtra("profileImage", user.getProfileImage()).putExtra("uid", uid).putExtra("currentUserProfileImage", user.getProfileImage()).putExtra("currentUserName", user.getName()).putExtra("parentKarma", user.getKarma()).putExtra("userKarma", user.getKarma()));
+
+                            }
                         });
 
                         int resId = R.anim.layout_animation;

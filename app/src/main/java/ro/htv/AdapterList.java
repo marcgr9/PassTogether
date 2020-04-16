@@ -37,6 +37,7 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         void OnItemClick(int poz);
         void OnPhotoClick(int poz);
         void OnSmallPhotoClick(int poz);
+        void OnTextClick(int poz);
     }
     void setOnItemClick(OnItemClickListener listener)
     {
@@ -76,6 +77,13 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
             });
             Nume = itemView.findViewById(R.id.numePersoana);
             Desc = itemView.findViewById(R.id.descriere);
+            Desc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null)
+                        listener.OnTextClick(getAdapterPosition());
+                }
+            });
             up = itemView.findViewById(R.id.SUUS);
             down = itemView.findViewById(R.id.down);
             Tot = itemView.findViewById(R.id.Cardpost);
