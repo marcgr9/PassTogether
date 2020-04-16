@@ -163,7 +163,7 @@ public class Settings extends AppCompatActivity {
         if (item.getItemId() == R.id.topicsBtn) {
             startActivity(new Intent(getBaseContext(), TopicSelection.class).putExtra("uid", uid));
             finish();
-            return true;
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
