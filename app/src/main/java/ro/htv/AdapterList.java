@@ -114,12 +114,14 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         if (PostareActuala.getPost() == false) {
             holder.Tot.setBackgroundColor(Color.parseColor("#8cdec7"));
             if (!PostareActuala.getLinkToImage().equals(""))  {
+                holder.Im2.setVisibility(View.VISIBLE);
                 glide
                         .load(PostareActuala.getLinkToImage())
                         .apply(new RequestOptions().override(540, 960))
                         .into(holder.Im2);
             } else {
                 glide.load("").into(holder.Im2);
+                holder.Im2.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -137,12 +139,14 @@ public class AdapterList extends RecyclerView.Adapter<AdapterList.Viewholder> {
         holder.dataa.setText(Utils.convertFromUnix(String.valueOf(Integer.parseInt(PostareActuala.getTimestamp()))));
         if (PostareActuala.getPost() == true)
         if (!PostareActuala.getLinkToImage().equals(""))  {
+            holder.Im2.setVisibility(View.VISIBLE);
             glide
                     .load(PostareActuala.getLinkToImage())
                     .into(holder.Im2);
         } else {
             // nu avem timp sa facem un fix mai elegant
             glide.load("").into(holder.Im2);
+            holder.Im2.setVisibility(View.INVISIBLE);
         }
 
         glide

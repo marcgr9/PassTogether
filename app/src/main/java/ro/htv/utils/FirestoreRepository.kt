@@ -135,6 +135,9 @@ class FirestoreRepository {
                     if (incrementKarma) {
                         // incredibil ce metoda de cacat
                         root.collection("posts").document(post.parent).get()
+
+                                // de ce plm aici n am facut direct post.owner_uid
+                                // TODO() ce plm
                                 .addOnSuccessListener { parent ->
                                     if (parent.toObject(Post::class.java)!!.ownwer_uid != post.ownwer_uid) {
                                         root.collection("users").document(post.ownwer_uid).update("karma", FieldValue.increment(2))
@@ -143,13 +146,17 @@ class FirestoreRepository {
                                                 .addOnSuccessListener {posts ->
                                                     posts.forEach {
                                                         root.collection("posts").document(it.id).update("owner_karma", FieldValue.increment(2))
-                                                                .addOnSuccessListener {
-                                                                    response.value = Response(
-                                                                            Utils.Responses.OK,
-                                                                            "karma crescuta"
-                                                                    )
-                                                                }
+//                                                                .addOnSuccessListener {
+//                                                                    response.value = Response(
+//                                                                            Utils.Responses.OK,
+//                                                                            "karma crescuta"
+//                                                                    )
+//                                                                }
                                                     }
+                                                    response.value = Response(
+                                                            Utils.Responses.OK,
+                                                            "karms crescuta"
+                                                    )
                                                 }
                                     } else {
                                         response.value = Response(
@@ -161,7 +168,7 @@ class FirestoreRepository {
                     } else {
                         response.value = Response(
                                 Utils.Responses.OK,
-                                ""
+                                it.id
                         )
                     }
                 }.addOnFailureListener {

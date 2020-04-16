@@ -38,5 +38,7 @@
     <string name="numberOfPosts">%1$s postari / %2$s comentarii</string>
     <string name="yearsSince">%1$s ani</string>
     <string name="settingsWithName">Setari - %1$s</string>
+    <string name="commentsLoading">Se incarca comentariile</string>
+    <string name="loadingParent">Se incarca postarea mama</string>
 
 </resources>

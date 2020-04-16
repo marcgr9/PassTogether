@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -79,6 +80,8 @@ public class CometariiPostare extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cometarii_postare);
 
+        Log.d(TAG, "onCreate");
+
         androidx.appcompat.widget.Toolbar myToolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(getString(R.string.comments));
         setSupportActionBar(myToolbar);
@@ -99,15 +102,17 @@ public class CometariiPostare extends AppCompatActivity {
         firestoreRepository = new FirestoreRepository();
         storageRepository = new StorageRepository();
 
-        getParentPost(idParent);
-        getComments(idParent);
-
-        //initFloatingButton();
         relativeLayout = findViewById(R.id.postare);
         recyclerView = findViewById(R.id.commview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        ui(false);
+        getSupportActionBar().setTitle(getString(R.string.loadingParent));
+        getParentPost(idParent);
+
+        //initFloatingButton();
     }
 
     @Override
@@ -127,6 +132,7 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void updateCurrentPost(final Post currentPost) {
+        Log.d(TAG, "updateCurrentPost");
         initFloatingButton();
 
         TextView nume = (TextView) findViewById(R.id.numePersoana);
@@ -167,18 +173,29 @@ public class CometariiPostare extends AppCompatActivity {
         nume.setText(currentPost.getOwner_name());
         Desc.setText(currentPost.getText());
 
-        Glide.with(this)
-                .load(currentPost.getLinkToImage())
-                .apply(new RequestOptions().override(400, 400))
-                .into(imv);
+        if (!currentPost.getLinkToImage().equals("")) {
+            imv.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(currentPost.getLinkToImage())
+                    .apply(new RequestOptions().override(400, 400))
+                    .into(imv);
+        } else {
+            imv.setVisibility(View.GONE);
+        }
 
         Glide.with(this)
                 .load(currentPost.getOwner_profilePicture())
                 .circleCrop()
                 .into(postOwnerProfilePicture);
+
+        // listener in glide ca sa faci show la ui numa cand se incarca imaginile
+        // pacat ca n avem vreme
+
+        getComments(idParent);
     }
 
     private void getParentPost(String id) {
+        Log.d(TAG, "getParent");
         MutableLiveData<Response> parentPost = firestoreRepository.getPostById(id);
         parentPost.observe(this, new Observer<Response>() {
             @Override
@@ -196,6 +213,8 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void getComments(String id) {
+        Log.d(TAG, "getComments");
+        getSupportActionBar().setTitle(getString(R.string.commentsLoading));
         MutableLiveData<PostsResponse> comments = firestoreRepository.getPostsByParentId(id);
         comments.observe(this, new Observer<PostsResponse>() {
             @Override
@@ -204,11 +223,16 @@ public class CometariiPostare extends AppCompatActivity {
                     System.out.println(response.getPosts().size());
                     listOfPosts = response.getPosts();
 
+                    Log.d(TAG, String.valueOf(listOfPosts.size()));
+
                     Collections.sort(listOfPosts, new Comparator<Post>() {
                         public int compare(Post u1, Post u2) {
                             return u2.getTimestamp().toString().compareTo(u1.getTimestamp().toString());
                         }
                     });
+
+                    Log.d(TAG, String.valueOf(listOfPosts.size()));
+
 
                     adapter = new AdapterList(listOfPosts, Glide.with(getBaseContext()));
                     adapter.setOnItemClick(new AdapterList.OnItemClickListener() {
@@ -238,12 +262,15 @@ public class CometariiPostare extends AppCompatActivity {
                         }
                     });
                     recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getBaseContext(), R.anim.layout_animation));
+                    ui(true);
                 }
             }
         });
     }
 
     private void initFloatingButton() {
+        Log.d(TAG, "initFloatingButton");
         FloatingActionButton fb = findViewById(R.id.floating_action_button);
         initCommentDialog();
 
@@ -256,6 +283,7 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void initCommentDialog() {
+        Log.d(TAG, "initCommentDialog");
         addComment = new Dialog(this);
         addComment.setContentView(R.layout.popup_add_post);
         TextView popup_title = addComment.findViewById(R.id.popup_newpost);
@@ -312,10 +340,15 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void validateComment() {
+        Log.d(TAG, "validateComment");
         EditText post_text = addComment.findViewById(R.id.popup_description);
 
         if (post_text.getText() != null && post_text.getText().toString().length() > 6) {
+            Log.d(TAG, "validateCommentBun");
             myComment.setText(post_text.getText().toString());
+            addComment.findViewById(R.id.popup_add).setClickable(false);
+            addComment.findViewById(R.id.popup_addImage).setClickable(false);
+            addComment.findViewById(R.id.popup_progressBar).setVisibility(View.VISIBLE);
 
             //if (!currentPost.getOwnwer_uid().equals(myComment.getOwnwer_uid())) cresteKarma = true;
             myComment.setOwner_karma(userKarma);
@@ -329,6 +362,7 @@ public class CometariiPostare extends AppCompatActivity {
                     @Override
                     public void onChanged(Response response) {
                         if (response.ok()) {
+                            Log.d(TAG, "apelez done din validate");
                             done();
                         }
                     }
@@ -342,14 +376,14 @@ public class CometariiPostare extends AppCompatActivity {
                 }
             }
         } else {
-            Log.d(TAG, "erowre");
+            Log.d(TAG, "eroare la post");
             TextView err = addComment.findViewById(R.id.errField);
             err.setText(getString(R.string.postError));
         }
     }
 
     private void uploadImage(Bitmap bitmap) {
-        System.out.println("ndsdifnsi");
+        Log.d(TAG, "uploadImage");
         final MutableLiveData<Response> pendingImage = storageRepository.uploadImage(bitmap, "post");
         final LifecycleOwner th = this;
         pendingImage.observe(th, new Observer<Response>() {
@@ -368,6 +402,7 @@ public class CometariiPostare extends AppCompatActivity {
                         @Override
                         public void onChanged(Response response) {
                             if (response.ok()) {
+                                Log.d(TAG, "apelez done din upload");
                                 done();
                             }
                         }
@@ -378,10 +413,26 @@ public class CometariiPostare extends AppCompatActivity {
     }
 
     private void done() {
+        Log.d(TAG, "done");
 //        listOfPosts.add(myComment);
 //        adapter = new AdapterList(listOfPosts);
 //        recyclerView.setAdapter(adapter);
-        getComments(idParent);
+
+
+        listOfPosts.add(0, myComment);
+
+        if (!myComment.getOwnwer_uid().equals(currentPost.getOwnwer_uid())) {
+            for (Post p: listOfPosts) {
+                if (p.getOwnwer_uid().equals(myComment.getOwnwer_uid())) {
+                    p.setOwner_karma(p.getOwner_karma() + 2);
+                }
+            }
+        }
+
+        layoutManager.scrollToPosition(0);
+        Log.d(TAG, String.valueOf(listOfPosts.size()));
+        adapter.notifyDataSetChanged();
+        //getComments(idParent);
 
         addComment.hide();
         initFloatingButton();
@@ -390,9 +441,14 @@ public class CometariiPostare extends AppCompatActivity {
         myComment = new Post();
 
         initEmptyComment();
+
+        addComment.findViewById(R.id.popup_add).setClickable(true);
+        addComment.findViewById(R.id.popup_addImage).setClickable(true);
+        addComment.findViewById(R.id.popup_progressBar).setVisibility(View.INVISIBLE);
     }
 
     private void initEmptyComment() {
+        Log.d(TAG, "initEmptyComment");
         myComment.setPost(false);
         myComment.setParent(idParent);
         myComment.setTimestamp("0000");
@@ -408,6 +464,18 @@ public class CometariiPostare extends AppCompatActivity {
         imzoom.setVisibility(View.INVISIBLE);
 
         findViewById(R.id.blur).setVisibility(View.INVISIBLE);
+    }
+
+    private void ui(boolean visible) {
+        Log.d(TAG, "ui");
+        if (visible) {
+            getSupportActionBar().setTitle(getString(R.string.comments));
+            findViewById(R.id.postare).setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.postare).setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+        }
     }
 
 
