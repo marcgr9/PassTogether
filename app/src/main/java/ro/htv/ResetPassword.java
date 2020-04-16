@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class ResetPassword extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         reset_btn = findViewById(R.id.ResetButton);
+        final TextView errField = findViewById(R.id.errField);
 
         reset_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,8 +39,7 @@ public class ResetPassword extends AppCompatActivity {
 
                 if(TextUtils.isEmpty(userEmail))
                 {
-                    Toast.makeText(ResetPassword.this, "Email-ul e invalid.",
-                            Toast.LENGTH_SHORT).show();
+                    errField.setText("Email-ul nu poate fi gol");
                 }
                 else
                 {
@@ -53,12 +54,11 @@ public class ResetPassword extends AppCompatActivity {
                                         "Email-ul de resetare a parolei a fost trimis!",
                                 Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(ResetPassword.this, Login.class));
+                                finish();
                             }
                             else
                             {
-                                String error = task.getException().getMessage();
-                                Toast.makeText(ResetPassword.this, error,
-                                        Toast.LENGTH_SHORT).show();
+                                errField.setText(task.getException().getMessage());
                             }
                         }
                     });
