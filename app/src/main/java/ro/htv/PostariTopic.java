@@ -113,6 +113,8 @@ public class PostariTopic extends AppCompatActivity {
         mb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                post.setText("");
+                post.setLinkToImage("");
                 addPost.show();
             }
         });
@@ -222,13 +224,6 @@ public class PostariTopic extends AppCompatActivity {
 
             //loadPosts();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    post.setText("");
-                    post.setLinkToImage("");
-                }
-            }, 500);
         } else loadPosts();
 
         addPost.hide();

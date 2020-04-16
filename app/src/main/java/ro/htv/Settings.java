@@ -161,6 +161,7 @@ public class Settings extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.topicsBtn) {
             startActivity(new Intent(getBaseContext(), TopicSelection.class).putExtra("uid", uid));
+            finish();
             return true;
         }
 

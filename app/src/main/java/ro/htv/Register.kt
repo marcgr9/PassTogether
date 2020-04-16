@@ -83,6 +83,9 @@ class Register : AppCompatActivity() {
 
             val user: MutableLiveData<Response> = authRepository.register(email, pass)
 
+            registerBtn.text = "..."
+            registerBtn.isClickable = false
+
             user.observe(this, Observer {
                 if (it.ok()) {
                     val userData = User(it.value.toString(), email, name, birthday)
